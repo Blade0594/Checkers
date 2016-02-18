@@ -28,4 +28,10 @@ public class Move_pawn {
         if(x >= 450 && x <= 500) return 7;
         return 100;
     }
+    public Boolean move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
+    {
+        if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
+        if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
+        return false;
+    }
 }

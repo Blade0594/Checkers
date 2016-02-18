@@ -11,8 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	OrthographicCamera camera;
@@ -20,7 +18,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	int[][] mas_pawn;
 	int b_x = 100;
 	int b_y = 400;
-	Texture img;
+	Boolean possible_move = false;
+	int mouse_down_i ;
+	int mouse_down_j ;
+	int mouse_up_i;
+	int mouse_up_j;
+	Texture img_background;
 	Texture img_board;
 	Texture img_pawn_human;
 	Texture img_pawn_computer;
@@ -41,7 +44,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		touchPos = new Vector3();
 		mousemovePos = new Vector3();
 		touchuppos = new Vector3();
-		img = new Texture("background1.jpg");
+		img_background = new Texture("background1.jpg");
 		img_board = new Texture("board.jpg");
 		object1 = new Move_pawn();
 		player = new Texture("player1.png");
@@ -74,10 +77,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(img, 0, 0, 800, 480);
+		batch.draw(img_background, 0, 0, 800, 480);
 		batch.draw(img_board, 100, 50); //board.width, board.height
 		batch.draw(img_pawn_human, pawn.x, pawn.y); //normal texture
-		//batch.draw(player, 300, 200);
 		 b_y = 400;
 		for(int i = 0; i < 8; i++)
 		{
@@ -95,8 +97,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_y -= 50;
 
 		}
-		//if(show_m == true)
-		//font.draw(batch, String.valueOf(touchPos.x) + " " + String.valueOf(touchPos.y), touchPos.x, touchPos.y);
+		if(show_m == true)
+		{
+			font.draw(batch, String.valueOf(mouse_down_i) + " " +
+			String.valueOf(mouse_down_j) + " v: " + mas_pawn[mouse_down_i][mouse_down_j]  +
+					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
+					" __ " + String.valueOf(possible_move),50, 30);
+
+		}
 		batch.end();
 	}
 	@Override
@@ -128,51 +136,53 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				{
 					if((Math.pow((touchPos.x - (b_x+25)),2)  + Math.pow((touchPos.y - (b_y+25)),2)) <= 25*25  )
 					{
+						mouse_down_i = object1.get_i(touchPos.y);
+						mouse_down_j = object1.get_j(touchPos.x);
+						mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
+						mouse_up_j = mouse_down_j;
 						mas_pawn[i][j] = 0;
 						pawn.x = touchPos.x-25;
 						pawn.y = touchPos.y-25;
 						show_m = true;
-					//	move_pawn = true;
 					}
 				}
 				b_x += 50;
 			}
 			b_y -= 50;
-
 		}
 		if((Math.pow((touchPos.x - (pawn.x+25)),2)  + Math.pow((touchPos.y - (pawn.y+25)),2)) <= 25*25  )
 		{
 			move_pawn = true;
 		}
-		//pawn.x = touchPos.x-25;
-		//pawn.y = touchPos.y-25;
 		return true;
 	}
-
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		touchuppos.set(screenX, screenY, 0);
 		camera.unproject(touchuppos);
-
 		show_m = false;
 		if(move_pawn == true)
 		{
-
-			//if(touchuppos.x >= 250 && touchuppos.x <= 300 && touchuppos.y >= 200 && touchuppos.y <= 250)
-		//	{
-				show_m = true;
-				pawn.x = -1000;
+			show_m = true;
+			pawn.x = -1000;
+			//new coordinates of pawn
+			mouse_up_i = object1.get_i(touchuppos.y);
+			mouse_up_j = object1.get_j(touchuppos.x);
+			if(object1.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == true)
+			{
 				mas_pawn[object1.get_i(touchuppos.y)][object1.get_j(touchuppos.x)] = 1;
-		//	}
+			}
+			else  //back to previous position
+			{
+				mas_pawn[mouse_down_i][mouse_down_j] = 1;
+			}
 			move_pawn = false;
 		}
-
 		return false;
 	}
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		mousemovePos.set(screenX, screenY, 0);
-
 		camera.unproject(mousemovePos);
 		if(move_pawn == true)
 		{
@@ -184,7 +194,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-
 		return false;
 	}
 
@@ -194,9 +203,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	}
 	public void dispose() {
 		super.dispose();
-
 		img_board.dispose();
-
 		batch.dispose();
 	}
 }
