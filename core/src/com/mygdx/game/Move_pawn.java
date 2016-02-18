@@ -30,8 +30,10 @@ public class Move_pawn {
     }
     public Boolean move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
+        if(mas_pawn[i_finish][j_finish] != 0) return false;
         if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
         if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
+
         return false;
     }
 }

@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	OrthographicCamera camera;
 	SpriteBatch batch;
+	AI ai;
 	int[][] mas_pawn;
 	int b_x = 100;
 	int b_y = 400;
@@ -31,7 +31,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Move_pawn object1 ;
 	private BitmapFont font;
 	Texture player ;
-	Boolean show_m = false;
 	Vector3 touchPos ;
 	Vector3 mousemovePos ;
 	Vector3 touchuppos ;
@@ -51,6 +50,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		img_pawn_human = new Texture("pawn_human.png");
 		img_pawn_computer = new Texture("pawn_computer.png");
 		font = new BitmapFont();
+		ai = new AI();
 		mas_pawn = new int[][]{{0, 2, 0, 2, 0, 2, 0, 2},
 				{2, 0, 2, 0, 2, 0, 2, 0},
 				{0, 2, 0, 2, 0, 2, 0, 2},
@@ -97,14 +97,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_y -= 50;
 
 		}
-		if(show_m == true)
-		{
 			font.draw(batch, String.valueOf(mouse_down_i) + " " +
 			String.valueOf(mouse_down_j) + " v: " + mas_pawn[mouse_down_i][mouse_down_j]  +
 					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
 					" __ " + String.valueOf(possible_move),50, 30);
 
-		}
 		batch.end();
 	}
 	@Override
@@ -143,7 +140,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 						mas_pawn[i][j] = 0;
 						pawn.x = touchPos.x-25;
 						pawn.y = touchPos.y-25;
-						show_m = true;
 					}
 				}
 				b_x += 50;
@@ -160,17 +156,19 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		touchuppos.set(screenX, screenY, 0);
 		camera.unproject(touchuppos);
-		show_m = false;
 		if(move_pawn == true)
 		{
-			show_m = true;
 			pawn.x = -1000;
 			//new coordinates of pawn
 			mouse_up_i = object1.get_i(touchuppos.y);
 			mouse_up_j = object1.get_j(touchuppos.x);
 			if(object1.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == true)
 			{
+				//The move was successful
 				mas_pawn[object1.get_i(touchuppos.y)][object1.get_j(touchuppos.x)] = 1;
+				//There is the move of computer
+
+				ai.move(mas_pawn);
 			}
 			else  //back to previous position
 			{
