@@ -23,7 +23,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Texture img;
 	Texture img_board;
 	Texture img_pawn_human;
+	Texture img_pawn_computer;
 	Rectangle pawn;
+	Move_pawn object1 ;
 	private BitmapFont font;
 	Texture player ;
 	Boolean show_m = false;
@@ -41,8 +43,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		touchuppos = new Vector3();
 		img = new Texture("background1.jpg");
 		img_board = new Texture("board.jpg");
+		object1 = new Move_pawn();
 		player = new Texture("player1.png");
 		img_pawn_human = new Texture("pawn_human.png");
+		img_pawn_computer = new Texture("pawn_computer.png");
 		font = new BitmapFont();
 		mas_pawn = new int[][]{{0, 2, 0, 2, 0, 2, 0, 2},
 				{2, 0, 2, 0, 2, 0, 2, 0},
@@ -54,7 +58,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				{1, 0, 1, 0, 1, 0, 1, 0}
 		};
 		pawn = new Rectangle();
-		pawn.x = 100;
+		pawn.x = -100;
 		pawn.y = 50;
 		pawn.width = 50;
 		pawn.height = 50;
@@ -72,7 +76,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		batch.begin();
 		batch.draw(img, 0, 0, 800, 480);
 		batch.draw(img_board, 100, 50); //board.width, board.height
-		batch.draw(player, pawn.x, pawn.y);
+		batch.draw(img_pawn_human, pawn.x, pawn.y); //normal texture
 		//batch.draw(player, 300, 200);
 		 b_y = 400;
 		for(int i = 0; i < 8; i++)
@@ -81,7 +85,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			for(int j = 0; j < 8; j++)
 			{
 				if(mas_pawn[i][j] == 2) {
-					batch.draw(player, b_x, b_y);
+					batch.draw(img_pawn_computer, b_x, b_y);
 				}
 				if(mas_pawn[i][j] == 1) {
 					batch.draw(img_pawn_human, b_x, b_y);
@@ -91,8 +95,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_y -= 50;
 
 		}
-		if(show_m == true)
-		font.draw(batch, String.valueOf(touchPos.x) + " " + String.valueOf(touchPos.y), touchPos.x, touchPos.y);
+		//if(show_m == true)
+		//font.draw(batch, String.valueOf(touchPos.x) + " " + String.valueOf(touchPos.y), touchPos.x, touchPos.y);
 		batch.end();
 	}
 	@Override
@@ -153,12 +157,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		show_m = false;
 		if(move_pawn == true)
 		{
-			if(touchuppos.x >= 250 && touchuppos.x <= 300 && touchuppos.y >= 200 && touchuppos.y <= 250)
-			{
+
+			//if(touchuppos.x >= 250 && touchuppos.x <= 300 && touchuppos.y >= 200 && touchuppos.y <= 250)
+		//	{
 				show_m = true;
 				pawn.x = -1000;
-				mas_pawn[4][3] = 1;
-			}
+				mas_pawn[object1.get_i(touchuppos.y)][object1.get_j(touchuppos.x)] = 1;
+		//	}
 			move_pawn = false;
 		}
 
