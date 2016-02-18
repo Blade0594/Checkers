@@ -22,6 +22,7 @@ public class AI {
                     {
                         if(mas_pawn[a+1][b+1] == 1 && mas_pawn[a+2][b+2] == 0)
                         {
+                            mas_pawn[a][b] = 0;
                             mas_pawn[a+1][b+1] = 0;
                             mas_pawn[a+2][b+2] = 2;
                             hit = true;
@@ -32,6 +33,7 @@ public class AI {
                     {
                         if(mas_pawn[a+1][b-1] == 1 && mas_pawn[a+2][b-2] == 0)
                         {
+                            mas_pawn[a][b] = 0;
                             mas_pawn[a+1][b-1] = 0; //remove the pawn of player
                             mas_pawn[a+2][b-2] = 2;
                             return mas_pawn;

@@ -4,6 +4,38 @@ package com.mygdx.game;
  * Created by Dmitry on 18.02.2016.
  */
 public class Move_pawn {
+    public Boolean check_hit(int[][] mas_pawn) //if player have to hit
+    {
+        int a ; //i
+        int b ; //j
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                a = i; b = j;
+
+                if(mas_pawn[i][j] == 1)
+                {
+                    if(a >= 2 && b <= 5)
+                    {
+                        if(mas_pawn[a-1][b+1] == 2 && mas_pawn[a-2][b+2] == 0)
+                        {
+                            return true; //the player have to strike
+                        }
+                    }
+                   /* if()
+                    {
+                        if(mas_pawn[a-1][b+1] == 2 && mas_pawn[a+2][b+2] == 0)
+                        {
+                            return true; //the player have to strike
+                        }
+                    }*/
+
+                }
+            }
+        }
+        return false;
+    }
     public int get_i(float y)
     {
         if(y >= 50 && y <= 100) return 7;
@@ -30,6 +62,8 @@ public class Move_pawn {
     }
     public Boolean move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
+        //Check if player have to strike instead of move
+        if(check_hit(mas_pawn) == true) return false;
         if(mas_pawn[i_finish][j_finish] != 0) return false;
         if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
         if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
