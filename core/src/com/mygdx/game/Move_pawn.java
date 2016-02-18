@@ -23,13 +23,13 @@ public class Move_pawn {
                             return true; //the player have to strike
                         }
                     }
-                   /* if()
+                    if(a >= 2 && b >= 2)
                     {
-                        if(mas_pawn[a-1][b+1] == 2 && mas_pawn[a+2][b+2] == 0)
+                        if(mas_pawn[a-1][b-1] == 2 && mas_pawn[a-2][b-2] == 0)
                         {
                             return true; //the player have to strike
                         }
-                    }*/
+                    }
 
                 }
             }
@@ -63,11 +63,28 @@ public class Move_pawn {
     public Boolean move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
         //Check if player have to strike instead of move
-        if(check_hit(mas_pawn) == true) return false;
+       // if(check_hit(mas_pawn) == true) return false;
         if(mas_pawn[i_finish][j_finish] != 0) return false;
         if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
         if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
-
+        if(j_start >= 1)
+        {
+            if(mas_pawn[i_start-1][j_start-1] == 2 && mas_pawn[i_finish][j_finish] == 0)
+            {
+                mas_pawn[i_start][j_start] = 0;
+                mas_pawn[i_start-1][j_start-1] = 0;
+                return true;
+            }
+        }
+      if(j_start <= 6)
+      {
+          if(mas_pawn[i_start-1][j_start+1] == 2 && mas_pawn[i_finish][j_finish] == 0)
+          {
+              mas_pawn[i_start][j_start] = 0;
+              mas_pawn[i_start-1][j_start+1] = 0;
+              return true;
+          }
+      }
         return false;
     }
 }
