@@ -100,7 +100,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			font.draw(batch, String.valueOf(mouse_down_i) + " " +
 			String.valueOf(mouse_down_j) + " v: " + mas_pawn[mouse_down_i][mouse_down_j]  +
 					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
-					" __ " + String.valueOf(possible_move),50, 30);
+					" __ " + String.valueOf(possible_move) +
+					" Current_i_j: " + String.valueOf(human.get_current_i()) + "  " + String.valueOf(human.get_current_j()),50, 30);
 
 		batch.end();
 	}

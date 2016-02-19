@@ -4,73 +4,34 @@ package com.mygdx.game;
  * Created by Dmitry on 18.02.2016.
  */
 public class Move_pawn {
-    public Boolean have_to_hit(int[][] mas_pawn) //Общее сканирование
+    private int current_i = -100;
+    private int current_j = -100;
+    private Boolean check_collision(int[][] mas_pawn)
     {
-        for(int i = 0; i < 8; i++)
+        if(current_i >= 2 && current_j >= 2)
         {
-            for (int j = 0; j < 8; j++)
-            {
-                if(mas_pawn[i][j] == 1)
-                {
-                    if(i >= 2 && j >= 2)
-                    {
-                        if(mas_pawn[i-1][j-1] == 2 && mas_pawn[i-2][j-2] == 0) //<^
-                        {
-                            return true;
-                        }
-                    }
-                    if(i >= 2 && j <= 5)
-                    {
-                        if(mas_pawn[i-1][j+1] == 2 && mas_pawn[i-2][j+2] == 0) //>^
-                        {
-                            return true;
-                        }
-                    }
-                    if(i <= 5 && j <= 5)
-                    {
-                        if(mas_pawn[i+1][j+1] == 2 && mas_pawn[i+2][j+2] == 0) //>\/
-                        {
-                            return true;
-                        }
-                    }
-                    if(i <= 5 && j >= 2)
-                    {
-                        if(mas_pawn[i+1][j-1] == 2 && mas_pawn[i+2][j-2] == 0) //<\/
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    private Boolean check_collision(int[][] mas_pawn, int i_start, int j_start)
-    {
-        if(i_start >= 2 && j_start >= 2)
-        {
-            if(mas_pawn[i_start-1][j_start-1] == 2 && mas_pawn[i_start-2][j_start-2] == 0) //<^
+            if(mas_pawn[current_i-1][current_j-1] == 2 && mas_pawn[current_i-2][current_j-2] == 0) //<^
             {
                 return true;
             }
         }
-        if(i_start >= 2 && j_start <= 5)
+        if(current_i >= 2 && current_j <= 5) //+
         {
-            if(mas_pawn[i_start-1][j_start+1] == 2 && mas_pawn[i_start-2][j_start+2] == 0) //>^
+            if(mas_pawn[current_i-1][current_j+1] == 2 && mas_pawn[current_i-2][current_j+2] == 0) //>^
             {
                 return true;
             }
         }
-        if(i_start <= 5 && j_start <= 5)
+        if(current_i <= 5 && current_j <= 5) //+
         {
-            if(mas_pawn[i_start+1][j_start+1] == 2 && mas_pawn[i_start+2][j_start+2] == 0) //>\/
+            if(mas_pawn[current_i+1][current_j+1] == 2 && mas_pawn[current_i+2][current_j+2] == 0) //>\/
             {
                 return true;
             }
         }
-        if(i_start <= 5 && j_start >= 2)
+        if(current_i <= 5 && current_j >= 2)
         {
-            if(mas_pawn[i_start+1][j_start-1] == 2 && mas_pawn[i_start+2][j_start-2] == 0) //<\/
+            if(mas_pawn[current_i+1][current_j-1] == 2 && mas_pawn[current_i+2][current_j-2] == 0) //<\/
             {
                 return true;
             }
@@ -101,6 +62,11 @@ public class Move_pawn {
         if(x >= 450 && x <= 500) return 7;
         return 100;
     }
+    private void reset_current_i_j()
+    {
+        current_i = -100;
+        current_j = -100;
+    }
    private Boolean check(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
    {
        if(mas_pawn[i_finish][j_finish] != 0) return false;
@@ -110,12 +76,18 @@ public class Move_pawn {
    }
     public int move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
-        if(check_collision(mas_pawn, i_start, j_start) == false)
+        if(current_i == -100)
+        {
+            current_i = i_start;
+            current_j = j_start;
+        }
+        if(check_collision(mas_pawn) == false)
         {
             if(check(mas_pawn, i_start, j_start, i_finish, j_finish) == true)
             {
                 mas_pawn[i_finish][j_finish] = 1;
                 mas_pawn[i_start][j_start] = 0;
+                reset_current_i_j();
                 return 0;
             }
             else  //put in previous position
@@ -124,60 +96,101 @@ public class Move_pawn {
                 return 5;
             }
         }
-        if(check_collision(mas_pawn, i_start, j_start) == true) //if(have_to_hit(mas_pawn)  23:52
+        if(check_collision(mas_pawn) == true) //if(have_to_hit(mas_pawn)  23:52
         {
-            if(j_start >= 1 && i_start >= 1)
+            if(j_start >= 1 && i_start >= 1) //array boundaries
             {
-                if(mas_pawn[i_start-1][j_start-1] == 2 ) //&& mas_pawn[i_finish][j_finish] == 0
+                if(mas_pawn[i_start-1][j_start-1] == 2 && i_finish == (i_start-2) && j_finish == (j_start-2)) //<^
                 {
+                    //Check the condition - From which way did we come ?
+                    //нужно еще знать куда мы походили
                     mas_pawn[i_start][j_start] = 0;
-                   // mas_pawn[i_start-1][j_start-1] = 0;
-                    mas_pawn[i_finish+1][j_finish+1] = 0;  //1:27
+                    mas_pawn[i_start-1][j_start-1] = 0;
                     mas_pawn[i_finish][j_finish] = 1;  ///move to finish
-                    if(have_to_hit(mas_pawn) == true) return 1;
-                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                    //ход сделан - нужно переставить координаты, так как следующее сравнение не имеет смысла
+                    current_i = i_finish;
+                    current_j = j_finish;
+                    if(check_collision(mas_pawn) == true)
+                    {
+                        return 1;
+                    }
+                    if(check_collision(mas_pawn) == false)
+                    {
+                        reset_current_i_j();
+                        return 0; //move of AI
+                    }
                 }
             }
             if(j_start <= 6 && i_start >= 1)
             {
-                if(mas_pawn[i_start-1][j_start+1] == 2 ) //&& mas_pawn[i_finish][j_finish] == 0
+                if(mas_pawn[i_start-1][j_start+1] == 2 && i_finish == (i_start-2) && j_finish == (j_start+2)) //>^
                 {
                     mas_pawn[i_start][j_start] = 0;
-                 //   mas_pawn[i_start-1][j_start+1] = 0;
-                    mas_pawn[i_finish+1][j_finish-1] = 0; // 1:21 night
+                    mas_pawn[i_start-1][j_start+1] = 0;
                     mas_pawn[i_finish][j_finish] = 1;
-                    if(have_to_hit(mas_pawn) == true) return 1;
-                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                    //ход сделан - нужно переставить координаты, так как следующее сравнение не имеет смысла
+                    current_i = i_finish;
+                    current_j = j_finish;
+                    if(check_collision(mas_pawn) == true)
+                    {
+                        return 1;
+                    }
+                    if(check_collision(mas_pawn) == false)
+                    {
+                        reset_current_i_j();
+                        return 0; //move of AI
+                    }
                 }
             }
             if(j_start <= 6) //correct later the boundaries
             {
-                if(mas_pawn[i_start+1][j_start+1] == 2)  // && mas_pawn[i_finish][j_finish] == 0
+                if(mas_pawn[i_start+1][j_start+1] == 2 && i_finish == (i_start+2) && j_finish == (j_start+2)) //>\/
                 {
                     mas_pawn[i_start][j_start] = 0;
-                   // mas_pawn[i_start+1][j_start+1] = 0;
-                    mas_pawn[i_finish-1][j_finish-1] = 0;  //1:27
+                    mas_pawn[i_start+1][j_start+1] = 0;
                     mas_pawn[i_finish][j_finish] = 1;
-                    if(have_to_hit(mas_pawn) == true) return 1;
-                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                    //ход сделан - нужно переставить координаты, так как следующее сравнение не имеет смысла
+                    current_i = i_finish;
+                    current_j = j_finish;
+                    if(check_collision(mas_pawn) == true)
+                    {
+                        return 1;
+                    }
+                    if(check_collision(mas_pawn) == false)
+                    {
+                        reset_current_i_j();
+                        return 0; //move of AI
+                    }
                 }
             }
-            //left and down - move player
-           // if(j_start >= 1)
-           // {          // && i_finish == i_start+2 && j_finish == j_start-2
-                if(mas_pawn[i_start+1][j_start-1] == 2)  // mas_pawn[i_finish][j_finish] == 0
+                if(mas_pawn[i_start+1][j_start-1] == 2 && i_finish == (i_start+2) && j_finish == (j_start-2)) //<\/
                 {
                     mas_pawn[i_start][j_start] = 0; //move from this place
-                  //  mas_pawn[i_start+1][j_start-1] = 0; //kill the enemy
-                    mas_pawn[i_finish-1][j_finish+1] = 0; //new 0-50
+                    mas_pawn[i_start+1][j_start-1] = 0;
                     mas_pawn[i_finish][j_finish] = 1; //finishing moving
-                    if(have_to_hit(mas_pawn) == true) return 1;
-                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                    //ход сделан - нужно переставить координаты, так как следующее сравнение не имеет смысла
+                    current_i = i_finish;
+                    current_j = j_finish;
+                    if(check_collision(mas_pawn) == true)
+                    {
+                        return 1;
+                    }
+                    if (check_collision(mas_pawn) == false)
+                    {
+                        reset_current_i_j();
+                        return 0; //move of AI
+                    }
                 }
-            //}
         }
         return 5;
-
+    }
+    public int get_current_i()
+    {
+        return current_i;
+    }
+    public int get_current_j()
+    {
+        return current_j;
     }
 
 }
