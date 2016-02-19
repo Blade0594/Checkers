@@ -4,34 +4,75 @@ package com.mygdx.game;
  * Created by Dmitry on 18.02.2016.
  */
 public class Move_pawn {
-    public Boolean check_hit(int[][] mas_pawn) //if player have to hit
+    public Boolean have_to_hit(int[][] mas_pawn) //Общее сканирование
     {
-        int a ; //i
-        int b ; //j
         for(int i = 0; i < 8; i++)
         {
-            for(int j = 0; j < 8; j++)
+            for (int j = 0; j < 8; j++)
             {
-                a = i; b = j;
-
                 if(mas_pawn[i][j] == 1)
                 {
-                    if(a >= 2 && b <= 5)
+                    if(i >= 2 && j >= 2)
                     {
-                        if(mas_pawn[a-1][b+1] == 2 && mas_pawn[a-2][b+2] == 0)
+                        if(mas_pawn[i-1][j-1] == 2 && mas_pawn[i-2][j-2] == 0) //<^
                         {
-                            return true; //the player have to strike
+                            return true;
                         }
                     }
-                    if(a >= 2 && b >= 2)
+                    if(i >= 2 && j <= 5)
                     {
-                        if(mas_pawn[a-1][b-1] == 2 && mas_pawn[a-2][b-2] == 0)
+                        if(mas_pawn[i-1][j+1] == 2 && mas_pawn[i-2][j+2] == 0) //>^
                         {
-                            return true; //the player have to strike
+                            return true;
                         }
                     }
-
+                    if(i <= 5 && j <= 5)
+                    {
+                        if(mas_pawn[i+1][j+1] == 2 && mas_pawn[i+2][j+2] == 0) //>\/
+                        {
+                            return true;
+                        }
+                    }
+                    if(i <= 5 && j >= 2)
+                    {
+                        if(mas_pawn[i+1][j-1] == 2 && mas_pawn[i+2][j-2] == 0) //<\/
+                        {
+                            return true;
+                        }
+                    }
                 }
+            }
+        }
+        return false;
+    }
+    private Boolean check_collision(int[][] mas_pawn, int i_start, int j_start)
+    {
+        if(i_start >= 2 && j_start >= 2)
+        {
+            if(mas_pawn[i_start-1][j_start-1] == 2 && mas_pawn[i_start-2][j_start-2] == 0) //<^
+            {
+                return true;
+            }
+        }
+        if(i_start >= 2 && j_start <= 5)
+        {
+            if(mas_pawn[i_start-1][j_start+1] == 2 && mas_pawn[i_start-2][j_start+2] == 0) //>^
+            {
+                return true;
+            }
+        }
+        if(i_start <= 5 && j_start <= 5)
+        {
+            if(mas_pawn[i_start+1][j_start+1] == 2 && mas_pawn[i_start+2][j_start+2] == 0) //>\/
+            {
+                return true;
+            }
+        }
+        if(i_start <= 5 && j_start >= 2)
+        {
+            if(mas_pawn[i_start+1][j_start-1] == 2 && mas_pawn[i_start+2][j_start-2] == 0) //<\/
+            {
+                return true;
             }
         }
         return false;
@@ -60,31 +101,83 @@ public class Move_pawn {
         if(x >= 450 && x <= 500) return 7;
         return 100;
     }
-    public Boolean move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
+   private Boolean check(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
+   {
+       if(mas_pawn[i_finish][j_finish] != 0) return false;
+       if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
+       if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
+       return false;
+   }
+    public int move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
-        //Check if player have to strike instead of move
-       // if(check_hit(mas_pawn) == true) return false;
-        if(mas_pawn[i_finish][j_finish] != 0) return false;
-        if((i_finish == i_start-1) && (j_finish == j_start-1) ) return true;
-        if((i_finish == i_start-1) && (j_finish == j_start+1) ) return true;
-        if(j_start >= 1)
+        if(check_collision(mas_pawn, i_start, j_start) == false)
         {
-            if(mas_pawn[i_start-1][j_start-1] == 2 && mas_pawn[i_finish][j_finish] == 0)
+            if(check(mas_pawn, i_start, j_start, i_finish, j_finish) == true)
             {
+                mas_pawn[i_finish][j_finish] = 1;
                 mas_pawn[i_start][j_start] = 0;
-                mas_pawn[i_start-1][j_start-1] = 0;
-                return true;
+                return 0;
+            }
+            else  //put in previous position
+            {
+                mas_pawn[i_start][j_start] = 1;
+                return 5;
             }
         }
-      if(j_start <= 6)
-      {
-          if(mas_pawn[i_start-1][j_start+1] == 2 && mas_pawn[i_finish][j_finish] == 0)
-          {
-              mas_pawn[i_start][j_start] = 0;
-              mas_pawn[i_start-1][j_start+1] = 0;
-              return true;
-          }
-      }
-        return false;
+        if(check_collision(mas_pawn, i_start, j_start) == true) //if(have_to_hit(mas_pawn)  23:52
+        {
+            if(j_start >= 1 && i_start >= 1)
+            {
+                if(mas_pawn[i_start-1][j_start-1] == 2 ) //&& mas_pawn[i_finish][j_finish] == 0
+                {
+                    mas_pawn[i_start][j_start] = 0;
+                   // mas_pawn[i_start-1][j_start-1] = 0;
+                    mas_pawn[i_finish+1][j_finish+1] = 0;  //1:27
+                    mas_pawn[i_finish][j_finish] = 1;  ///move to finish
+                    if(have_to_hit(mas_pawn) == true) return 1;
+                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                }
+            }
+            if(j_start <= 6 && i_start >= 1)
+            {
+                if(mas_pawn[i_start-1][j_start+1] == 2 ) //&& mas_pawn[i_finish][j_finish] == 0
+                {
+                    mas_pawn[i_start][j_start] = 0;
+                 //   mas_pawn[i_start-1][j_start+1] = 0;
+                    mas_pawn[i_finish+1][j_finish-1] = 0; // 1:21 night
+                    mas_pawn[i_finish][j_finish] = 1;
+                    if(have_to_hit(mas_pawn) == true) return 1;
+                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                }
+            }
+            if(j_start <= 6) //correct later the boundaries
+            {
+                if(mas_pawn[i_start+1][j_start+1] == 2)  // && mas_pawn[i_finish][j_finish] == 0
+                {
+                    mas_pawn[i_start][j_start] = 0;
+                   // mas_pawn[i_start+1][j_start+1] = 0;
+                    mas_pawn[i_finish-1][j_finish-1] = 0;  //1:27
+                    mas_pawn[i_finish][j_finish] = 1;
+                    if(have_to_hit(mas_pawn) == true) return 1;
+                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                }
+            }
+            //left and down - move player
+           // if(j_start >= 1)
+           // {          // && i_finish == i_start+2 && j_finish == j_start-2
+                if(mas_pawn[i_start+1][j_start-1] == 2)  // mas_pawn[i_finish][j_finish] == 0
+                {
+                    mas_pawn[i_start][j_start] = 0; //move from this place
+                  //  mas_pawn[i_start+1][j_start-1] = 0; //kill the enemy
+                    mas_pawn[i_finish-1][j_finish+1] = 0; //new 0-50
+                    mas_pawn[i_finish][j_finish] = 1; //finishing moving
+                    if(have_to_hit(mas_pawn) == true) return 1;
+                    if(have_to_hit(mas_pawn) == false) return 0; //move of AI
+                }
+            //}
+        }
+        return 5;
+
     }
+
 }

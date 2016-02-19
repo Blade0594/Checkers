@@ -98,7 +98,7 @@ public class AI {
                         if (mas_pawn[a - 1][b - 1] == 1 && mas_pawn[a - 2][b - 2] == 0) //<^
                         {
                             mas_pawn[a][b] = 0; //remove enemy from previous place
-                            mas_pawn[a - 1][b - 1] = 1; //remove pawn of computer
+                            mas_pawn[a - 1][b - 1] = 0; //remove pawn of computer
                             mas_pawn[a - 2][b - 2] = 2; //move pawn of enemy
                             return mas_pawn;
                         }
@@ -139,7 +139,7 @@ public class AI {
                                 return mas_pawn;
                             }
                         }
-                        if(b >= 1) //move left
+                        if(b >= 1 && a <= 6) //move left
                         {
                             if(mas_pawn[a+1][b-1] == 0) //empty place on the border
                             {

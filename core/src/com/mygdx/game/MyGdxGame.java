@@ -28,7 +28,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Texture img_pawn_human;
 	Texture img_pawn_computer;
 	Rectangle pawn;
-	Move_pawn object1 ;
+	Move_pawn human ;
 	private BitmapFont font;
 	Texture player ;
 	Vector3 touchPos ;
@@ -45,7 +45,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		touchuppos = new Vector3();
 		img_background = new Texture("background1.jpg");
 		img_board = new Texture("board.jpg");
-		object1 = new Move_pawn();
+		human = new Move_pawn();
 		player = new Texture("player1.png");
 		img_pawn_human = new Texture("pawn_human.png");
 		img_pawn_computer = new Texture("pawn_computer.png");
@@ -133,8 +133,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				{
 					if((Math.pow((touchPos.x - (b_x+25)),2)  + Math.pow((touchPos.y - (b_y+25)),2)) <= 25*25  )
 					{
-						mouse_down_i = object1.get_i(touchPos.y);
-						mouse_down_j = object1.get_j(touchPos.x);
+						mouse_down_i = human.get_i(touchPos.y);
+						mouse_down_j = human.get_j(touchPos.x);
 						mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
 						mouse_up_j = mouse_down_j;
 						mas_pawn[i][j] = 0;
@@ -160,21 +160,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		{
 			pawn.x = -1000;
 			//new coordinates of pawn
-			mouse_up_i = object1.get_i(touchuppos.y);
-			mouse_up_j = object1.get_j(touchuppos.x);
-			if(object1.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == true)
+			mouse_up_i = human.get_i(touchuppos.y);
+			mouse_up_j = human.get_j(touchuppos.x);
+			if(human.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == 0)
 			{
-				//The move was successful
-				mas_pawn[object1.get_i(touchuppos.y)][object1.get_j(touchuppos.x)] = 1;
-				//There is the move of computer
-
-				ai.move(mas_pawn);
+				ai.move(mas_pawn); //allow to make move AI
 			}
-			else  //back to previous position
-			{
-				mas_pawn[mouse_down_i][mouse_down_j] = 1;
-			}
-			move_pawn = false;
 		}
 		return false;
 	}
