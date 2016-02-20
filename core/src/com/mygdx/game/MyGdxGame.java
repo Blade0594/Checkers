@@ -22,18 +22,26 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	int mouse_down_i ;
 	int mouse_down_j ;
 	int mouse_up_i;
+	int[] coordinate_move;
 	int mouse_up_j;
+	Convert convert;
+	float x = 0; float y = 0; // for animation when computer's pawn is moving
 	Texture img_background;
 	Texture img_board;
 	Texture img_pawn_human;
 	Texture img_pawn_computer;
 	Rectangle pawn;
+	Rectangle pawn_ai;
+	private int time = 0;
 	Move_pawn human ;
 	private BitmapFont font;
 	Texture player ;
 	Vector3 touchPos ;
 	Vector3 mousemovePos ;
+	float direction_x = 0.0f;
+	float direction_y = 0.0f;
 	Vector3 touchuppos ;
+	Boolean animation = false;
 	Boolean move_pawn = false;
 	@Override
 	public void create () {
@@ -41,11 +49,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 		touchPos = new Vector3();
+		//Движение компьютера, 0 - запуск анимации(value = 1), 1-4 - координаты перемещения, 5-6 удалить пешку игрока
+		coordinate_move = new int[] {0, -5,-5,-5,-5, -5, -5, -5 };
 		mousemovePos = new Vector3();
 		touchuppos = new Vector3();
 		img_background = new Texture("background1.jpg");
 		img_board = new Texture("board.jpg");
 		human = new Move_pawn();
+		convert = new Convert();
 		player = new Texture("player1.png");
 		img_pawn_human = new Texture("pawn_human.png");
 		img_pawn_computer = new Texture("pawn_computer.png");
@@ -65,21 +76,58 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		pawn.y = 50;
 		pawn.width = 50;
 		pawn.height = 50;
+		pawn_ai = new Rectangle();
+		pawn_ai.width = 50;
+		pawn_ai.height = 50;
 		Gdx.input.setInputProcessor(this);
 	}
-
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		time++;
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		batch.draw(img_background, 0, 0, 800, 480);
 		batch.draw(img_board, 100, 50); //board.width, board.height
-		batch.draw(img_pawn_human, pawn.x, pawn.y); //normal texture
+		batch.draw(img_pawn_human, pawn.x, pawn.y); //when playes move the pawn
+		if(animation == false)
+		{
+			if(coordinate_move[0] == 1) //launch animation
+			{
+				animation = true;
+				mas_pawn[coordinate_move[1]][coordinate_move[2]] = 0; //start
+				x = convert.get_x(coordinate_move[2]);
+				y = convert.get_y(coordinate_move[1]);
+				if(coordinate_move[7] == 3)
+				{
+					direction_x = 0.5f;
+					direction_y = -0.5f;
+				}
+				if(coordinate_move[7] == 4)
+				{
+					direction_x = -0.5f;
+					direction_y = -0.5f;
+				}
+			}
+		}
+		if(animation == true)
+		{
+			//Direction
+			x += direction_x;
+			y += direction_y;
+		}
+		batch.draw(img_pawn_computer, x, y);
+		if(x == convert.get_x(coordinate_move[4]) && y == convert.get_y(coordinate_move[3]))
+		{
+			mas_pawn[coordinate_move[3]][coordinate_move[4]] = 2; //finish
+			coordinate_move[0] = 0;
+			x = -100;
+			y = -100;
+			animation = false;
+		}
 		 b_y = 400;
 		for(int i = 0; i < 8; i++)
 		{
@@ -97,12 +145,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_y -= 50;
 
 		}
+		//Анимация движения пешек компьютера
+		//if(coordinate_move[0] != -5)
+		///{
+			batch.draw(img_pawn_computer, pawn_ai.x, pawn_ai.y);
+		//}
 			font.draw(batch, String.valueOf(mouse_down_i) + " " +
 			String.valueOf(mouse_down_j) + " v: " + mas_pawn[mouse_down_i][mouse_down_j]  +
 					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
 					" __ " + String.valueOf(possible_move) +
 					" Current_i_j: " + String.valueOf(human.get_current_i()) + "  " + String.valueOf(human.get_current_j()),50, 30);
-
+		    font.draw(batch, "time: " +  String.valueOf(time), 50,420);
 		batch.end();
 	}
 	@Override
@@ -130,18 +183,18 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_x = 100;
 			for(int j = 0; j < 8; j++)
 			{
-				if(mas_pawn[i][j] == 1) //player's pawn
+				if(mas_pawn[i][j] == 1 && mas_pawn[human.get_i(touchPos.y)][human.get_j(touchPos.x)] == 1) //player's pawn
 				{
-					if((Math.pow((touchPos.x - (b_x+25)),2)  + Math.pow((touchPos.y - (b_y+25)),2)) <= 25*25  )
-					{
-						mouse_down_i = human.get_i(touchPos.y);
-						mouse_down_j = human.get_j(touchPos.x);
-						mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
-						mouse_up_j = mouse_down_j;
-						mas_pawn[i][j] = 0;
-						pawn.x = touchPos.x-25;
-						pawn.y = touchPos.y-25;
-					}
+				   if(human.get_i(touchPos.y) == i && human.get_j(touchPos.x) == j) //choose the cell, not the pawn
+				   {
+					   mouse_down_i = human.get_i(touchPos.y); //remember the i_start and j_start
+					   mouse_down_j = human.get_j(touchPos.x);
+					   mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
+					   mouse_up_j = mouse_down_j;
+					   mas_pawn[i][j] = 0;
+					   pawn.x = touchPos.x - 25;
+					   pawn.y = touchPos.y - 25;
+				   }
 				}
 				b_x += 50;
 			}
@@ -165,8 +218,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			mouse_up_j = human.get_j(touchuppos.x);
 			if(human.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == 0)
 			{
-				ai.move(mas_pawn); //allow to make move AI
+				ai.move(mas_pawn, coordinate_move); //allow to make move AI
 			}
+			//new
+			move_pawn = false;
 		}
 		return false;
 	}

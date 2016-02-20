@@ -53,53 +53,50 @@ public class AI {
     }
     public int[][] hit(int[][] mas_pawn)
     {
-        int a ; //i
-        int b ; //j
         for(int i = 0; i < 8; i++)
         {
             for(int j = 0; j < 8; j++)
             {
-                a = i; b = j;
                 if(mas_pawn[i][j] == 2)
                 {
-                    if(b <= 5 && a <= 5) //hit to right
+                    if(j <= 5 && i <= 5) //hit to right
                     {
-                        if (mas_pawn[a + 1][b + 1] == 1 && mas_pawn[a + 2][b + 2] == 0) //hit in direction >\/
+                        if (mas_pawn[i + 1][j + 1] == 1 && mas_pawn[i + 2][j + 2] == 0) //hit in direction >\/
                         {
-                            mas_pawn[a][b] = 0;
-                            mas_pawn[a + 1][b + 1] = 0;
-                            mas_pawn[a + 2][b + 2] = 2;
+                            mas_pawn[i][j] = 0;
+                            mas_pawn[i + 1][j + 1] = 0;
+                            mas_pawn[i + 2][j + 2] = 2;
                             return mas_pawn;
                         }
                     }
-                    if(a >= 2 && b <= 5)
+                    if(i >= 2 && j <= 5)
                     {
-                        if (mas_pawn[a - 1][b + 1] == 1 && mas_pawn[a - 2][b + 2] == 0) //hit ^>
+                        if (mas_pawn[i - 1][j + 1] == 1 && mas_pawn[i - 2][j + 2] == 0) //hit ^>
                         {
-                            mas_pawn[a][b] = 0;
-                            mas_pawn[a - 1][b + 1] = 0;
-                            mas_pawn[a - 2][b + 2] = 2;
+                            mas_pawn[i][j] = 0;
+                            mas_pawn[i - 1][j + 1] = 0;
+                            mas_pawn[i - 2][j + 2] = 2;
 
                             return mas_pawn;
                         }
                     }
-                    if(b >= 2 && a <= 5) //hit to left
+                    if(j >= 2 && i <= 5) //hit to left
                     {
-                        if (mas_pawn[a + 1][b - 1] == 1 && mas_pawn[a + 2][b - 2] == 0)  //<\/
+                        if (mas_pawn[i + 1][j - 1] == 1 && mas_pawn[i + 2][j - 2] == 0)  //<\/
                         {
-                            mas_pawn[a][b] = 0;
-                            mas_pawn[a + 1][b - 1] = 0; //remove the pawn of player
-                            mas_pawn[a + 2][b - 2] = 2;
+                            mas_pawn[i][j] = 0;
+                            mas_pawn[i + 1][j - 1] = 0; //remove the pawn of player
+                            mas_pawn[i + 2][j - 2] = 2;
                             return mas_pawn;
                         }
                     }
-                    if(a >= 2 && b >= 2)
+                    if(i >= 2 && j >= 2)
                     {
-                        if (mas_pawn[a - 1][b - 1] == 1 && mas_pawn[a - 2][b - 2] == 0) //<^
+                        if (mas_pawn[i - 1][j - 1] == 1 && mas_pawn[i - 2][j - 2] == 0) //<^
                         {
-                            mas_pawn[a][b] = 0; //remove enemy from previous place
-                            mas_pawn[a - 1][b - 1] = 0; //remove pawn of computer
-                            mas_pawn[a - 2][b - 2] = 2; //move pawn of enemy
+                            mas_pawn[i][j] = 0; //remove enemy from previous place
+                            mas_pawn[i - 1][j - 1] = 0; //remove pawn of computer
+                            mas_pawn[i - 2][j - 2] = 2; //move pawn of enemy
                             return mas_pawn;
                         }
                     }
@@ -109,7 +106,7 @@ public class AI {
         }
         return mas_pawn;
     }
-    public int[][]  move(int[][] mas_pawn)
+    public int[]  move(int[][] mas_pawn, int[] coordinate_move)
     {
         simple_move = true;
         for(int k = 0; k < 12; k++)
@@ -121,37 +118,47 @@ public class AI {
 
         if(simple_move == true)
         {
-            int a ; // i
-            int b ; // j
             for(int i = 0; i < 8; i++)
             {
                 for(int j = 0; j < 8; j++)
                 {
                     if(mas_pawn[i][j] == 2)
                     {
-                        a = i; b = j; //array bounds
-                        if(a <= 6 && b <= 6)
+                        if(i <= 6 && j <= 6)
                         {
-                            if(mas_pawn[a+1][b+1] == 0) //empty place on the border
+                            if(mas_pawn[i+1][j+1] == 0) //empty place on the border
                             {
-                                mas_pawn[a][b] = 0; //delete pawn from previous position
-                                mas_pawn[a+1][b+1] = 2;
-                                return mas_pawn;
+                               // mas_pawn[i][j] = 0; //delete pawn from previous position
+                              //  mas_pawn[i+1][j+1] = 2;
+
+                                coordinate_move[0] = 1; //launch animation
+                                coordinate_move[1] = i;
+                                coordinate_move[2] = j;
+                                coordinate_move[3] = i+1;
+                                coordinate_move[4] = j+1;
+                                coordinate_move[7] = 3;
+                                return coordinate_move;
                             }
                         }
-                        if(b >= 1 && a <= 6) //move left
+                        if(j >= 1 && i <= 6) //move left
                         {
-                            if(mas_pawn[a+1][b-1] == 0) //empty place on the border
+                            if(mas_pawn[i+1][j-1] == 0) //empty place on the border
                             {
-                                mas_pawn[a][b] = 0; //delete pawn from previous position
-                                mas_pawn[a+1][b-1] = 2;
-                                return mas_pawn;
+                                //mas_pawn[i][j] = 0; //delete pawn from previous position
+                               // mas_pawn[i+1][j-1] = 2;
+                                coordinate_move[0] = 1; //launch animation
+                                coordinate_move[1] = i;  //moving enemy's pawn
+                                coordinate_move[2] = j;
+                                coordinate_move[3] = i+1;
+                                coordinate_move[4] = j-1;
+                                coordinate_move[7] = 4;
+                                return coordinate_move;
                             }
                         }
                     }
                 }
             }
         }
-        return mas_pawn;
+        return coordinate_move;
     }
 }

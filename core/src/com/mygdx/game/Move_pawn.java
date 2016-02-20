@@ -76,6 +76,12 @@ public class Move_pawn {
    }
     public int move(int[][] mas_pawn, int i_start, int j_start, int i_finish, int j_finish)
     {
+        //If the player put the pawn in the same position
+        if(i_start == i_finish && j_start == j_finish)
+        {
+            mas_pawn[i_start][j_start] = 1;
+            return 1; //the move was not done
+        }
         if(current_i == -100)
         {
             current_i = i_start;
@@ -163,24 +169,25 @@ public class Move_pawn {
                     }
                 }
             }
-                if(mas_pawn[i_start+1][j_start-1] == 2 && i_finish == (i_start+2) && j_finish == (j_start-2)) //<\/
+            if(i_start <= 5 && j_start >= 2)
+            {
+                if (mas_pawn[i_start + 1][j_start - 1] == 2 && i_finish == (i_start + 2) && j_finish == (j_start - 2)) //<\/
                 {
                     mas_pawn[i_start][j_start] = 0; //move from this place
-                    mas_pawn[i_start+1][j_start-1] = 0;
+                    mas_pawn[i_start + 1][j_start - 1] = 0;
                     mas_pawn[i_finish][j_finish] = 1; //finishing moving
                     //ход сделан - нужно переставить координаты, так как следующее сравнение не имеет смысла
                     current_i = i_finish;
                     current_j = j_finish;
-                    if(check_collision(mas_pawn) == true)
-                    {
+                    if (check_collision(mas_pawn) == true) {
                         return 1;
                     }
-                    if (check_collision(mas_pawn) == false)
-                    {
+                    if (check_collision(mas_pawn) == false) {
                         reset_current_i_j();
                         return 0; //move of AI
                     }
                 }
+            }
         }
         return 5;
     }
