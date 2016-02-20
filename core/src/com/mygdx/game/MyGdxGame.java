@@ -31,6 +31,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Texture img_board;
 	Texture img_pawn_human;
 	Texture img_pawn_computer;
+	Texture img_pawn_computer_king;
+	Texture img_pawn_human_king;
 	Rectangle pawn;
 	Rectangle pawn_ai;
 	private int time = 0;
@@ -61,6 +63,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		player = new Texture("player1.png");
 		img_pawn_human = new Texture("pawn_human.png");
 		img_pawn_computer = new Texture("pawn_computer.png");
+		img_pawn_computer_king = new Texture("pawn_computer_king2.png");
+		img_pawn_human_king = new Texture("pawn_human_king.png");
 		font = new BitmapFont();
 		ai = new AI();
 		mas_pawn = new int[][]{{0, 2, 0, 2, 0, 2, 0, 2},
@@ -78,6 +82,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		pawn.width = 50;
 		pawn.height = 50;
 		pawn_ai = new Rectangle();
+		pawn_ai.x = -100;
+		pawn_ai.y = 50;
 		pawn_ai.width = 50;
 		pawn_ai.height = 50;
 		Gdx.input.setInputProcessor(this);
@@ -155,6 +161,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				}
 				if(mas_pawn[i][j] == 1) {
 					batch.draw(img_pawn_human, b_x, b_y);
+				}
+				if(mas_pawn[i][j] == 3) {
+					batch.draw(img_pawn_human_king, b_x, b_y);
+				}
+				if(mas_pawn[i][j] == 4) {
+					batch.draw(img_pawn_computer_king, b_x, b_y);
 				}
 				b_x += 50;
 			}
