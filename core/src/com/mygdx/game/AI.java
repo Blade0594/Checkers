@@ -4,9 +4,33 @@ package com.mygdx.game;
  * Created by Dmitry on 18.02.2016.
  */
 public class AI {
-
-    private Boolean simple_move = true; //if there is at least 1 possible to hit - just hit without moving
-    private Boolean check_hit(int[][] mas_pawn)
+    private int current_i = -100;
+    private int current_j = -100;
+    private boolean check_next_hit(int[][] mas_pawn)
+    {
+        if(current_i >=2 && current_j >=2)
+        {
+            if(mas_pawn[current_i-1][current_j-1] == 1 && mas_pawn[current_i-2][current_j-2] == 0) //^<
+                return true;
+        }
+        if(current_i >= 2 && current_j <= 5)
+        {
+            if(mas_pawn[current_i-1][current_j+1] == 1 && mas_pawn[current_i-2][current_j+2] == 0) //>^
+                return true;
+        }
+        if(current_i <= 5 && current_j <= 5)
+        {
+            if(mas_pawn[current_i+1][current_j+1] == 1 && mas_pawn[current_i+2][current_j+2] == 0) //>\/
+                return true;
+        }
+        if(current_i <= 5 && current_j >= 2)
+        {
+            if(mas_pawn[current_i+1][current_j-1] == 1 && mas_pawn[current_i+2][current_j-2] == 0) //<\/
+                return true;
+        }
+        return false;
+    }
+    public Boolean check_hit(int[][] mas_pawn)
     {
         for(int i = 0; i < 8; i++)
         {
@@ -18,7 +42,6 @@ public class AI {
                     {
                         if(mas_pawn[i-1][j-1] == 1 && mas_pawn[i-2][j-2] == 0) //<^
                         {
-                            simple_move = false;
                             return true;
                         }
                     }
@@ -26,7 +49,6 @@ public class AI {
                     {
                         if(mas_pawn[i-1][j+1] == 1 && mas_pawn[i-2][j+2] == 0) //>^
                         {
-                            simple_move = false;
                             return true;
                         }
                     }
@@ -34,7 +56,6 @@ public class AI {
                    {
                        if(mas_pawn[i+1][j+1] == 1 && mas_pawn[i+2][j+2] == 0) //>\/
                        {
-                           simple_move = false;
                            return true;
                        }
                    }
@@ -42,7 +63,6 @@ public class AI {
                    {
                        if(mas_pawn[i+1][j-1] == 1 && mas_pawn[i+2][j-2] == 0) //<\/
                        {
-                           simple_move = false;
                            return true;
                        }
                    }
@@ -71,7 +91,8 @@ public class AI {
                             coordinate_move[2] = j;
                             coordinate_move[3] = i+2;
                             coordinate_move[4] = j+2;
-
+                            current_i = i+2;
+                            current_j = j+2;
                             coordinate_move[7] = 3; //direction
                             return coordinate_move;
                         }
@@ -88,7 +109,8 @@ public class AI {
                             coordinate_move[2] = j;
                             coordinate_move[3] = i-2;
                             coordinate_move[4] = j+2;
-
+                            current_i = i-2;
+                            current_j = j+2;
                             coordinate_move[7] = 2; //direction
                             return coordinate_move;
                         }
@@ -105,9 +127,10 @@ public class AI {
                             coordinate_move[2] = j;
                             coordinate_move[3] = i+2;
                             coordinate_move[4] = j-2;
-
+                            current_i = i+2;
+                            current_j = j-2;
                             coordinate_move[7] = 4; //direction
-                            return coordinate_move;
+                           // return coordinate_move;
                         }
                     }
                     if(i >= 2 && j >= 2)
@@ -122,7 +145,8 @@ public class AI {
                             coordinate_move[2] = j;
                             coordinate_move[3] = i-2;
                             coordinate_move[4] = j-2;
-
+                             current_i = i-2;
+                             current_j = j-2;
                             coordinate_move[7] = 1; //direction
                             return coordinate_move;
                         }
@@ -133,17 +157,21 @@ public class AI {
         }
         return coordinate_move;
     }
-    public int[]  move(int[][] mas_pawn, int[] coordinate_move)
+    public Boolean move(int[][] mas_pawn, int[] coordinate_move)
     {
-        simple_move = true;
-        for(int k = 0; k < 12; k++)
+        //0 = true 1 = false
+        //изменить координаты на новые
+        if(check_hit(mas_pawn) == true)
         {
-            if(check_hit(mas_pawn) == true)
-                hit(mas_pawn, coordinate_move);
-            else break;
-        }
+            hit(mas_pawn, coordinate_move);
+            if(check_next_hit(mas_pawn) == true) //Если после перемещения у компьютера будет возможность сделать новый удар
+            {
+                return true;  //ai have to make move again, this is needed to make animation on every hit
+            }
+            else return false; //player can make move
 
-        if(simple_move == true)
+        }
+        if(check_hit(mas_pawn) == false)
         {
             for(int i = 0; i < 8; i++)
             {
@@ -164,7 +192,7 @@ public class AI {
                                 coordinate_move[3] = i+1;
                                 coordinate_move[4] = j+1;
                                 coordinate_move[7] = 3;
-                                return coordinate_move;
+                                return false; //player have to make a move
                             }
                         }
                         if(j >= 1 && i <= 6) //move left
@@ -179,13 +207,13 @@ public class AI {
                                 coordinate_move[3] = i+1;
                                 coordinate_move[4] = j-1;
                                 coordinate_move[7] = 4;
-                                return coordinate_move;
+                                return false; //player have to make a move
                             }
                         }
                     }
                 }
             }
         }
-        return coordinate_move;
+        return false;
     }
 }

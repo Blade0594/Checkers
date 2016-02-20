@@ -18,6 +18,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	int[][] mas_pawn;
 	int b_x = 100;
 	int b_y = 400;
+	Boolean ai_move_boolean = false;
 	Boolean possible_move = false;
 	int mouse_down_i ;
 	int mouse_down_j ;
@@ -85,7 +86,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		time++;
 		camera.update();
 
 		batch.setProjectionMatrix(camera.combined);
@@ -138,6 +138,11 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			x = -100;
 			y = -100;
 			animation = false;
+			if(ai_move_boolean == true)
+			{
+				ai.move(mas_pawn, coordinate_move);
+				ai_move_boolean = false;
+			}
 		}
 		 b_y = 400;
 		for(int i = 0; i < 8; i++)
@@ -166,7 +171,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
 					" __ " + String.valueOf(possible_move) +
 					" Current_i_j: " + String.valueOf(human.get_current_i()) + "  " + String.valueOf(human.get_current_j()),50, 30);
-		    font.draw(batch, "time: " +  String.valueOf(time), 50,420);
+		    font.draw(batch, "ai_move_boolean: " +  String.valueOf(ai_move_boolean),20,420);
 		batch.end();
 	}
 	@Override
@@ -229,7 +234,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			mouse_up_j = human.get_j(touchuppos.x);
 			if(human.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == 0)
 			{
-				ai.move(mas_pawn, coordinate_move); //allow to make move AI
+				ai_move_boolean = ai.move(mas_pawn, coordinate_move);
 			}
 			//new
 			move_pawn = false;
