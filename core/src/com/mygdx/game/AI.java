@@ -51,7 +51,7 @@ public class AI {
         }
         return false;
     }
-    public int[][] hit(int[][] mas_pawn)
+    public int[] hit(int[][] mas_pawn, int[] coordinate_move)
     {
         for(int i = 0; i < 8; i++)
         {
@@ -63,48 +63,75 @@ public class AI {
                     {
                         if (mas_pawn[i + 1][j + 1] == 1 && mas_pawn[i + 2][j + 2] == 0) //hit in direction >\/
                         {
-                            mas_pawn[i][j] = 0;
+                           // mas_pawn[i][j] = 0;
                             mas_pawn[i + 1][j + 1] = 0;
-                            mas_pawn[i + 2][j + 2] = 2;
-                            return mas_pawn;
+                          //  mas_pawn[i + 2][j + 2] = 2;
+                            coordinate_move[0] = 1; //launch animation
+                            coordinate_move[1] = i;
+                            coordinate_move[2] = j;
+                            coordinate_move[3] = i+2;
+                            coordinate_move[4] = j+2;
+
+                            coordinate_move[7] = 3; //direction
+                            return coordinate_move;
                         }
                     }
                     if(i >= 2 && j <= 5)
                     {
                         if (mas_pawn[i - 1][j + 1] == 1 && mas_pawn[i - 2][j + 2] == 0) //hit ^>
                         {
-                            mas_pawn[i][j] = 0;
+                           // mas_pawn[i][j] = 0;
                             mas_pawn[i - 1][j + 1] = 0;
-                            mas_pawn[i - 2][j + 2] = 2;
+                           // mas_pawn[i - 2][j + 2] = 2;
+                            coordinate_move[0] = 1; //launch animation
+                            coordinate_move[1] = i;
+                            coordinate_move[2] = j;
+                            coordinate_move[3] = i-2;
+                            coordinate_move[4] = j+2;
 
-                            return mas_pawn;
+                            coordinate_move[7] = 2; //direction
+                            return coordinate_move;
                         }
                     }
                     if(j >= 2 && i <= 5) //hit to left
                     {
                         if (mas_pawn[i + 1][j - 1] == 1 && mas_pawn[i + 2][j - 2] == 0)  //<\/
                         {
-                            mas_pawn[i][j] = 0;
+                           // mas_pawn[i][j] = 0;
                             mas_pawn[i + 1][j - 1] = 0; //remove the pawn of player
-                            mas_pawn[i + 2][j - 2] = 2;
-                            return mas_pawn;
+                          //  mas_pawn[i + 2][j - 2] = 2;
+                            coordinate_move[0] = 1; //launch animation
+                            coordinate_move[1] = i;
+                            coordinate_move[2] = j;
+                            coordinate_move[3] = i+2;
+                            coordinate_move[4] = j-2;
+
+                            coordinate_move[7] = 4; //direction
+                            return coordinate_move;
                         }
                     }
                     if(i >= 2 && j >= 2)
                     {
                         if (mas_pawn[i - 1][j - 1] == 1 && mas_pawn[i - 2][j - 2] == 0) //<^
                         {
-                            mas_pawn[i][j] = 0; //remove enemy from previous place
+                           // mas_pawn[i][j] = 0; //remove enemy from previous place
                             mas_pawn[i - 1][j - 1] = 0; //remove pawn of computer
-                            mas_pawn[i - 2][j - 2] = 2; //move pawn of enemy
-                            return mas_pawn;
+                           // mas_pawn[i - 2][j - 2] = 2; //move pawn of enemy
+                            coordinate_move[0] = 1; //launch animation
+                            coordinate_move[1] = i;
+                            coordinate_move[2] = j;
+                            coordinate_move[3] = i-2;
+                            coordinate_move[4] = j-2;
+
+                            coordinate_move[7] = 1; //direction
+                            return coordinate_move;
                         }
                     }
 
                 }
             }
         }
-        return mas_pawn;
+        return coordinate_move;
     }
     public int[]  move(int[][] mas_pawn, int[] coordinate_move)
     {
@@ -112,7 +139,7 @@ public class AI {
         for(int k = 0; k < 12; k++)
         {
             if(check_hit(mas_pawn) == true)
-                hit(mas_pawn);
+                hit(mas_pawn, coordinate_move);
             else break;
         }
 

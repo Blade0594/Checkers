@@ -13,7 +13,7 @@ public class Convert {
         if(j == 4) return 300;
         if(j == 5) return 350;
         if(j == 6) return 400;
-        if(j == 7) return 340;
+        if(j == 7) return 450;
         return 9000;
     }
     public int get_y(int i)

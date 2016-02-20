@@ -111,6 +111,17 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					direction_x = -0.5f;
 					direction_y = -0.5f;
 				}
+				//new directions
+				if(coordinate_move[7] == 1)
+				{
+					direction_x = -0.5f;
+					direction_y = 0.5f;
+				}
+				if(coordinate_move[7] == 2)
+				{
+					direction_x = 0.5f;
+					direction_y = 0.5f;
+				}
 			}
 		}
 		if(animation == true)
