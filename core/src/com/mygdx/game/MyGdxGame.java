@@ -26,6 +26,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	int[] coordinate_move;
 	int mouse_up_j;
 	Convert convert;
+	int current_pawn_type = -5;
 	float x = 0; float y = 0; // for animation when computer's pawn is moving
 	Texture img_background;
 	Texture img_board;
@@ -211,7 +212,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			b_x = 100;
 			for(int j = 0; j < 8; j++)
 			{
-				if(mas_pawn[i][j] == 1 && mas_pawn[human.get_i(touchPos.y)][human.get_j(touchPos.x)] == 1) //player's pawn
+				if((mas_pawn[i][j] == 1 || mas_pawn[i][j] == 3)
+						&& (mas_pawn[human.get_i(touchPos.y)][human.get_j(touchPos.x)] == 1
+						||  mas_pawn[human.get_i(touchPos.y)][human.get_j(touchPos.x)] == 3)) //player's pawn
 				{
 				   if(human.get_i(touchPos.y) == i && human.get_j(touchPos.x) == j) //choose the cell, not the pawn
 				   {
@@ -219,6 +222,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					   mouse_down_j = human.get_j(touchPos.x);
 					   mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
 					   mouse_up_j = mouse_down_j;
+					    current_pawn_type = mas_pawn[i][j];
 					   mas_pawn[i][j] = 0;
 					   pawn.x = touchPos.x - 25;
 					   pawn.y = touchPos.y - 25;
@@ -244,7 +248,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			//new coordinates of pawn
 			mouse_up_i = human.get_i(touchuppos.y);
 			mouse_up_j = human.get_j(touchuppos.x);
-			if(human.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j) == 0)
+			if(human.move(mas_pawn, mouse_down_i, mouse_down_j, mouse_up_i, mouse_up_j, current_pawn_type) == 0)
 			{
 				ai_move_boolean = ai.move(mas_pawn, coordinate_move);
 			}

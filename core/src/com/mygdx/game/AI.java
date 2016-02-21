@@ -10,22 +10,22 @@ public class AI {
     {
         if(current_i >=2 && current_j >=2)
         {
-            if(mas_pawn[current_i-1][current_j-1] == 1 && mas_pawn[current_i-2][current_j-2] == 0) //^<
+            if((mas_pawn[current_i-1][current_j-1] == 1 || mas_pawn[current_i-1][current_j-1] == 3) && mas_pawn[current_i-2][current_j-2] == 0) //^<
                 return true;
         }
         if(current_i >= 2 && current_j <= 5)
         {
-            if(mas_pawn[current_i-1][current_j+1] == 1 && mas_pawn[current_i-2][current_j+2] == 0) //>^
+            if((mas_pawn[current_i-1][current_j+1] == 1 || mas_pawn[current_i-1][current_j+1] == 3) && mas_pawn[current_i-2][current_j+2] == 0) //>^
                 return true;
         }
         if(current_i <= 5 && current_j <= 5)
         {
-            if(mas_pawn[current_i+1][current_j+1] == 1 && mas_pawn[current_i+2][current_j+2] == 0) //>\/
+            if((mas_pawn[current_i+1][current_j+1] == 1 || mas_pawn[current_i+1][current_j+1] == 3) && mas_pawn[current_i+2][current_j+2] == 0) //>\/
                 return true;
         }
         if(current_i <= 5 && current_j >= 2)
         {
-            if(mas_pawn[current_i+1][current_j-1] == 1 && mas_pawn[current_i+2][current_j-2] == 0) //<\/
+            if((mas_pawn[current_i+1][current_j-1] == 1 || mas_pawn[current_i+1][current_j-1] == 3) && mas_pawn[current_i+2][current_j-2] == 0) //<\/
                 return true;
         }
         return false;
@@ -40,28 +40,28 @@ public class AI {
                 {
                     if(i >= 2 && j >=2)
                     {
-                        if(mas_pawn[i-1][j-1] == 1 && mas_pawn[i-2][j-2] == 0) //<^
+                        if((mas_pawn[i-1][j-1] == 1 || mas_pawn[i-1][j-1] == 3) && mas_pawn[i-2][j-2] == 0) //<^
                         {
                             return true;
                         }
                     }
                     if(i >= 2 && j <= 5)
                     {
-                        if(mas_pawn[i-1][j+1] == 1 && mas_pawn[i-2][j+2] == 0) //>^
+                        if((mas_pawn[i-1][j+1] == 1 || mas_pawn[i-1][j+1] == 3) && mas_pawn[i-2][j+2] == 0) //>^
                         {
                             return true;
                         }
                     }
                    if(i <= 5 && j <= 5)
                    {
-                       if(mas_pawn[i+1][j+1] == 1 && mas_pawn[i+2][j+2] == 0) //>\/
+                       if((mas_pawn[i+1][j+1] == 1 || mas_pawn[i+1][j+1] == 3) && mas_pawn[i+2][j+2] == 0) //>\/
                        {
                            return true;
                        }
                    }
                    if(i <= 5 && j >= 2)
                    {
-                       if(mas_pawn[i+1][j-1] == 1 && mas_pawn[i+2][j-2] == 0) //<\/
+                       if((mas_pawn[i+1][j-1] == 1 || mas_pawn[i+1][j-1] == 3) && mas_pawn[i+2][j-2] == 0) //<\/
                        {
                            return true;
                        }
@@ -81,7 +81,7 @@ public class AI {
                 {
                     if(j <= 5 && i <= 5) //hit to right
                     {
-                        if (mas_pawn[i + 1][j + 1] == 1 && mas_pawn[i + 2][j + 2] == 0) //hit in direction >\/
+                        if ((mas_pawn[i + 1][j + 1] == 1 || mas_pawn[i + 1][j + 1] == 3) && mas_pawn[i + 2][j + 2] == 0) //hit in direction >\/
                         {
                            // mas_pawn[i][j] = 0;
                             mas_pawn[i + 1][j + 1] = 0;
@@ -99,7 +99,7 @@ public class AI {
                     }
                     if(i >= 2 && j <= 5)
                     {
-                        if (mas_pawn[i - 1][j + 1] == 1 && mas_pawn[i - 2][j + 2] == 0) //hit ^>
+                        if ((mas_pawn[i - 1][j + 1] == 1 || mas_pawn[i - 1][j + 1] == 3) && mas_pawn[i - 2][j + 2] == 0) //hit ^>
                         {
                            // mas_pawn[i][j] = 0;
                             mas_pawn[i - 1][j + 1] = 0;
@@ -117,7 +117,7 @@ public class AI {
                     }
                     if(j >= 2 && i <= 5) //hit to left
                     {
-                        if (mas_pawn[i + 1][j - 1] == 1 && mas_pawn[i + 2][j - 2] == 0)  //<\/
+                        if ((mas_pawn[i + 1][j - 1] == 1 || mas_pawn[i + 1][j - 1] == 3) && mas_pawn[i + 2][j - 2] == 0)  //<\/
                         {
                            // mas_pawn[i][j] = 0;
                             mas_pawn[i + 1][j - 1] = 0; //remove the pawn of player
@@ -135,7 +135,7 @@ public class AI {
                     }
                     if(i >= 2 && j >= 2)
                     {
-                        if (mas_pawn[i - 1][j - 1] == 1 && mas_pawn[i - 2][j - 2] == 0) //<^
+                        if ((mas_pawn[i - 1][j - 1] == 1 || mas_pawn[i - 1][j - 1] == 3) && mas_pawn[i - 2][j - 2] == 0) //<^
                         {
                            // mas_pawn[i][j] = 0; //remove enemy from previous place
                             mas_pawn[i - 1][j - 1] = 0; //remove pawn of computer
@@ -161,10 +161,10 @@ public class AI {
     {
         //0 = true 1 = false
         //изменить координаты на новые
-        if(check_hit(mas_pawn) == true)
+        if(check_hit(mas_pawn))
         {
             hit(mas_pawn, coordinate_move);
-            if(check_next_hit(mas_pawn) == true) //Если после перемещения у компьютера будет возможность сделать новый удар
+            if(check_next_hit(mas_pawn)) //Если после перемещения у компьютера будет возможность сделать новый удар
             {
                 return true;  //ai have to make move again, this is needed to make animation on every hit
             }
