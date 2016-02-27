@@ -110,24 +110,24 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				y = convert.get_y(coordinate_move[1]);
 				if(coordinate_move[7] == 3)
 				{
-					direction_x = 0.5f;
-					direction_y = -0.5f;
+					direction_x = 1f;
+					direction_y = -1f;
 				}
 				if(coordinate_move[7] == 4)
 				{
-					direction_x = -0.5f;
-					direction_y = -0.5f;
+					direction_x = -1f;
+					direction_y = -1f;
 				}
 				//new directions
 				if(coordinate_move[7] == 1)
 				{
-					direction_x = -0.5f;
-					direction_y = 0.5f;
+					direction_x = -1f;
+					direction_y = 1f;
 				}
 				if(coordinate_move[7] == 2)
 				{
-					direction_x = 0.5f;
-					direction_y = 0.5f;
+					direction_x = 1f;
+					direction_y = 1f;
 				}
 			}
 		}
