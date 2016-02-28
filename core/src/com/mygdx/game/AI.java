@@ -8,26 +8,32 @@ public class AI {
     private int current_j = -100;
     private boolean check_next_hit(int[][] mas_pawn)
     {
-        if(current_i >=2 && current_j >=2)
-        {
-            if((mas_pawn[current_i-1][current_j-1] == 1 || mas_pawn[current_i-1][current_j-1] == 3) && mas_pawn[current_i-2][current_j-2] == 0) //^<
-                return true;
-        }
-        if(current_i >= 2 && current_j <= 5)
-        {
-            if((mas_pawn[current_i-1][current_j+1] == 1 || mas_pawn[current_i-1][current_j+1] == 3) && mas_pawn[current_i-2][current_j+2] == 0) //>^
-                return true;
-        }
-        if(current_i <= 5 && current_j <= 5)
-        {
-            if((mas_pawn[current_i+1][current_j+1] == 1 || mas_pawn[current_i+1][current_j+1] == 3) && mas_pawn[current_i+2][current_j+2] == 0) //>\/
-                return true;
-        }
-        if(current_i <= 5 && current_j >= 2)
-        {
-            if((mas_pawn[current_i+1][current_j-1] == 1 || mas_pawn[current_i+1][current_j-1] == 3) && mas_pawn[current_i+2][current_j-2] == 0) //<\/
-                return true;
-        }
+      //  Gdx.app.log("drgret", "check_next_hit1");
+       // if(mas_pawn[current_i][current_j] == 2)
+        //{
+        //    Gdx.app.log("drgret", "check_next_hit2");
+            if(current_i >=2 && current_j >=2)
+            {
+                if((mas_pawn[current_i-1][current_j-1] == 1 || mas_pawn[current_i-1][current_j-1] == 3) && mas_pawn[current_i-2][current_j-2] == 0) //^<
+                    return true;
+            }
+            if(current_i >= 2 && current_j <= 5)
+            {
+                if((mas_pawn[current_i-1][current_j+1] == 1 || mas_pawn[current_i-1][current_j+1] == 3) && mas_pawn[current_i-2][current_j+2] == 0) //>^
+                    return true;
+            }
+            if(current_i <= 5 && current_j <= 5)
+            {
+                if((mas_pawn[current_i+1][current_j+1] == 1 || mas_pawn[current_i+1][current_j+1] == 3) && mas_pawn[current_i+2][current_j+2] == 0) //>\/
+                    return true;
+            }
+            if(current_i <= 5 && current_j >= 2)
+            {
+                if((mas_pawn[current_i+1][current_j-1] == 1 || mas_pawn[current_i+1][current_j-1] == 3) && mas_pawn[current_i+2][current_j-2] == 0) //<\/
+                    return true;
+            }
+       // }
+
         return false;
     }
     public Boolean check_hit(int[][] mas_pawn) //just return true or false

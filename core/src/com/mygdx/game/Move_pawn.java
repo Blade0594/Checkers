@@ -16,28 +16,28 @@ public class Move_pawn {
         {
             if(current_i >= 2 && current_j >= 2)
             {
-                if(mas_pawn[current_i-1][current_j-1] == 2 && mas_pawn[current_i-2][current_j-2] == 0) //<^
+                if((mas_pawn[current_i-1][current_j-1] == 2 || mas_pawn[current_i-1][current_j-1] == 4) && mas_pawn[current_i-2][current_j-2] == 0) //<^
                 {
                     return true;
                 }
             }
             if(current_i >= 2 && current_j <= 5) //+
             {
-                if(mas_pawn[current_i-1][current_j+1] == 2 && mas_pawn[current_i-2][current_j+2] == 0) //>^
+                if((mas_pawn[current_i-1][current_j+1] == 2 || mas_pawn[current_i-1][current_j+1] == 4) && mas_pawn[current_i-2][current_j+2] == 0) //>^
                 {
                     return true;
                 }
             }
             if(current_i <= 5 && current_j <= 5) //+
             {
-                if(mas_pawn[current_i+1][current_j+1] == 2 && mas_pawn[current_i+2][current_j+2] == 0) //>\/
+                if((mas_pawn[current_i+1][current_j+1] == 2 || mas_pawn[current_i+1][current_j+1] == 4) && mas_pawn[current_i+2][current_j+2] == 0) //>\/
                 {
                     return true;
                 }
             }
             if(current_i <= 5 && current_j >= 2)
             {
-                if(mas_pawn[current_i+1][current_j-1] == 2 && mas_pawn[current_i+2][current_j-2] == 0) //<\/
+                if((mas_pawn[current_i+1][current_j-1] == 2 || mas_pawn[current_i+1][current_j-1] == 4) && mas_pawn[current_i+2][current_j-2] == 0) //<\/
                 {
                     return true;
                 }
@@ -77,11 +77,11 @@ public class Move_pawn {
                     next_j = next_j - 1;
                     if(next_i >= 1 && next_j >= 1) //array boundaries
                     {
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i-1][next_j-1] == 0)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4)  && mas_pawn[next_i-1][next_j-1] == 0)
                         {
                             return true;
                         }
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i-1][next_j-1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j-1] == 2)
                         {
                             return false;
                         }
@@ -98,11 +98,11 @@ public class Move_pawn {
                     next_j = next_j + 1;
                     if(next_i >= 1 && next_j <= 6)
                     {
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i-1][next_j+1] == 0)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 0)
                         {
                             return true;
                         }
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i-1][next_j+1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 2)
                         {
                             return false;
                         }
@@ -120,11 +120,11 @@ public class Move_pawn {
                     next_j = next_j + 1;
                     if(next_i <= 6 && next_j <= 6 && next_i >= 0 && next_j >= 0)
                     {
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i+1][next_j+1] == 0)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j+1] == 0)
                         {
                             return true; //player have to hit
                         }
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i+1][next_j+1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j+1] == 2)
                         {
                             return false; //player have to hit
                         }
@@ -141,11 +141,11 @@ public class Move_pawn {
                     next_j = next_j - 1;
                     if(next_i <= 6 && next_j >= 1)
                     {
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i+1][next_j-1] == 0)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j-1] == 0)
                         {
                             return true;
                         }
-                        if(mas_pawn[next_i][next_j] == 2 && mas_pawn[next_i-1][next_j+1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 2)
                         {
                             return false;
                         }
@@ -400,7 +400,7 @@ public class Move_pawn {
                 int count_enemies = count_element(mas_pawn);
                 if(j_start >= 1 && i_start >= 1) //array boundaries
                 {
-                    if(mas_pawn[i_start-1][j_start-1] == 2 && i_finish == (i_start-2) && j_finish == (j_start-2)) //<^
+                    if((mas_pawn[i_start-1][j_start-1] == 2 || mas_pawn[i_start-1][j_start-1] == 4) && i_finish == (i_start-2) && j_finish == (j_start-2)) //<^
                     {
                         //Check the condition - From which way did we come ?
                         //нужно еще знать куда мы походили
@@ -413,7 +413,7 @@ public class Move_pawn {
                 }
                 if(j_start <= 6 && i_start >= 1)
                 {
-                    if(mas_pawn[i_start-1][j_start+1] == 2 && i_finish == (i_start-2) && j_finish == (j_start+2)) //>^
+                    if((mas_pawn[i_start-1][j_start+1] == 2 || mas_pawn[i_start-1][j_start+1] == 4) && i_finish == (i_start-2) && j_finish == (j_start+2)) //>^
                     {
                         if(move_or_Hit(mas_pawn, i_start, j_start, i_finish, j_finish, -1, 1, 1) == 1)
                         {
@@ -424,7 +424,7 @@ public class Move_pawn {
                 }
                 if(j_start <= 5 && i_start <=5) //correct later the boundaries
                 {
-                    if(mas_pawn[i_start+1][j_start+1] == 2 && i_finish == (i_start+2) && j_finish == (j_start+2)) //>\/
+                    if((mas_pawn[i_start+1][j_start+1] == 2 || mas_pawn[i_start+1][j_start+1] == 4) && i_finish == (i_start+2) && j_finish == (j_start+2)) //>\/
                     {
                         if(move_or_Hit(mas_pawn, i_start, j_start, i_finish, j_finish, 1, 1, 1) == 1)
                         {
@@ -435,7 +435,7 @@ public class Move_pawn {
                 }
                 if(i_start <= 5 && j_start >= 2)
                 {
-                    if (mas_pawn[i_start + 1][j_start - 1] == 2 && i_finish == (i_start + 2) && j_finish == (j_start - 2)) //<\/
+                    if ((mas_pawn[i_start + 1][j_start - 1] == 2 || mas_pawn[i_start + 1][j_start - 1] == 4) && i_finish == (i_start + 2) && j_finish == (j_start - 2)) //<\/
                     {
                         if (move_or_Hit(mas_pawn, i_start, j_start, i_finish, j_finish, 1, -1, 1) == 1)
                         {
