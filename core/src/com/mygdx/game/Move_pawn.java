@@ -363,8 +363,8 @@ public class Move_pawn {
                     c_i = c_i + di;
                     c_j = c_j + dj;
 
-                    Gdx.app.log("c_i", Integer.toString(c_i));
-                    Gdx.app.log("c_j", Integer.toString(c_j));
+                //    Gdx.app.log("c_i", Integer.toString(c_i));
+                //    Gdx.app.log("c_j", Integer.toString(c_j));
                     if(mas_pawn[c_i][c_j] == 2) //remember the position of enemies
                     {
                         hit_i = c_i;

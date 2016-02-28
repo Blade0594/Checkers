@@ -1,5 +1,5 @@
 package com.mygdx.game;
-
+import com.badlogic.gdx.Gdx;
 /**
  * Created by Dmitry on 18.02.2016.
  */
@@ -30,7 +30,7 @@ public class AI {
         }
         return false;
     }
-    public Boolean check_hit(int[][] mas_pawn)
+    public Boolean check_hit(int[][] mas_pawn) //just return true or false
     {
         for(int i = 0; i < 8; i++)
         {
@@ -64,6 +64,51 @@ public class AI {
                        if((mas_pawn[i+1][j-1] == 1 || mas_pawn[i+1][j-1] == 3) && mas_pawn[i+2][j-2] == 0) //<\/
                        {
                            return true;
+                       }
+                   }
+                }
+                if(mas_pawn[i][j] == 4)
+                {
+                    //check in all direction
+                    //direction 1
+                    int c_i = i;
+                    int c_j = j;
+                    int di = 0; int dj = 0;
+                   for(int k = 0; k < 4; k++)
+                   {
+                       if(k == 0)
+                       {
+                           di = -1;  dj = -1;
+                       }
+                       if(k == 1)
+                       {
+                           di = -1;  dj = 1;
+                       }
+                       if(k == 2)
+                       {
+                           di = 1;   dj = 1;
+                       }
+                       if(k == 3)
+                       {
+                           di = 1;   dj = -1;
+                       }
+                       while(true)
+                       {
+                           c_i = c_i + di;
+                           c_j = c_j + dj;
+                           Gdx.app.log("c_i_ai", Integer.toString(c_i));
+                           Gdx.app.log("c_j_ai", Integer.toString(c_j));
+                           if(c_i >= 1 && c_j >= 1) //add later check of boundaries
+                           {
+                               if((mas_pawn[c_i][c_j] == 1 || mas_pawn[c_i][c_j] == 3) && mas_pawn[c_i-1][c_j-1] == 0)
+                               {
+                                   return true;
+                               }
+                           }
+                           if(c_i == 0 || c_i == 7 || c_j == 0 || c_j == 7)
+                           {
+                               break;
+                           }
                        }
                    }
                 }
@@ -151,6 +196,9 @@ public class AI {
                             return coordinate_move;
                         }
                     }
+                }
+                if(mas_pawn[i][j] == 4)
+                {
 
                 }
             }
@@ -159,8 +207,6 @@ public class AI {
     }
     public Boolean move(int[][] mas_pawn, int[] coordinate_move)
     {
-        //0 = true 1 = false
-        //изменить координаты на новые
         if(check_hit(mas_pawn))
         {
             hit(mas_pawn, coordinate_move);
