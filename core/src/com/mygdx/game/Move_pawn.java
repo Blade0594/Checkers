@@ -457,9 +457,9 @@ public class Move_pawn {
     private int count_element(int[][] mas_pawn)
     {
         int count = 0;
-        for(int i = 0; i < 7; i++)
+        for(int i = 0; i < 8; i++)
         {
-            for(int j = 0; j < 7; j++)
+            for(int j = 0; j < 8; j++)
             {
                 if(mas_pawn[i][j] == 2)
                 {

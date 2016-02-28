@@ -140,15 +140,16 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		batch.draw(img_pawn_computer, x, y);
 		if(x == convert.get_x(coordinate_move[4]) && y == convert.get_y(coordinate_move[3]))
 		{
-			mas_pawn[coordinate_move[3]][coordinate_move[4]] = 2; //finish
+			if(coordinate_move[3] == 7)
+			mas_pawn[coordinate_move[3]][coordinate_move[4]] = 4; //king pawn
+			else  mas_pawn[coordinate_move[3]][coordinate_move[4]] = 2;
 			coordinate_move[0] = 0;
 			x = -100;
 			y = -100;
 			animation = false;
 			if(ai_move_boolean == true)
 			{
-				ai.move(mas_pawn, coordinate_move);
-				ai_move_boolean = false;
+				ai_move_boolean = ai.move(mas_pawn, coordinate_move);
 			}
 		}
 		 b_y = 400;
@@ -184,7 +185,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 					" __ " + String.valueOf(mouse_up_i) + " " + String.valueOf(mouse_up_j) +
 					" __ " + String.valueOf(possible_move) +
 					" Current_i_j: " + String.valueOf(human.get_current_i()) + "  " + String.valueOf(human.get_current_j()),50, 30);
-		    font.draw(batch, "ai_move_boolean: " +  String.valueOf(ai_move_boolean),20,420);
+		  //  font.draw(batch, "ai_move_boolean: " +  String.valueOf(ai_move_boolean),20,420);
 		batch.end();
 	}
 	@Override
