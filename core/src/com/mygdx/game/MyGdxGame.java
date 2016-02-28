@@ -53,8 +53,9 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 		touchPos = new Vector3();
-		//Движение компьютера, 0 - запуск анимации(value = 1), 1-4 - координаты перемещения, 5-6 удалить пешку игрока
-		coordinate_move = new int[] {0, -5,-5,-5,-5, -5, -5, -5 };
+		//Движение компьютера, 0 - запуск анимации(value = 1), 1-4 - координаты перемещения, 5-6 удалить пешку игрока,
+		// 7 - direction, 8 - type_pawn - king pawn of just pawn
+		coordinate_move = new int[] {0, -5,-5,-5,-5, -5, -5, -5, -5 };
 		mousemovePos = new Vector3();
 		touchuppos = new Vector3();
 		img_background = new Texture("background1.jpg");
@@ -105,7 +106,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			if(coordinate_move[0] == 1) //launch animation
 			{
 				animation = true;
-				mas_pawn[coordinate_move[1]][coordinate_move[2]] = 0; //start
+				mas_pawn[coordinate_move[1]][coordinate_move[2]] = 0; //delete from start position
+
 				x = convert.get_x(coordinate_move[2]);
 				y = convert.get_y(coordinate_move[1]);
 				if(coordinate_move[7] == 3)
@@ -142,8 +144,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		{
 			if(coordinate_move[3] == 7)
 			mas_pawn[coordinate_move[3]][coordinate_move[4]] = 4; //king pawn
-			else  mas_pawn[coordinate_move[3]][coordinate_move[4]] = 2;
+			else  mas_pawn[coordinate_move[3]][coordinate_move[4]] = coordinate_move[8];
 			coordinate_move[0] = 0;
+			//delete the hit player's pawn
+			if(coordinate_move[5] != -5)
+			mas_pawn[coordinate_move[5]][coordinate_move[6]] = 0;
+			//mas_pawn[coordinate_move[3]][coordinate_move[4]] =
 			x = -100;
 			y = -100;
 			animation = false;

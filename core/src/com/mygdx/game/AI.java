@@ -92,23 +92,27 @@ public class AI {
                        {
                            di = 1;   dj = -1;
                        }
+                        c_i = i;
+                        c_j = j;
                        while(true)
                        {
                            c_i = c_i + di;
                            c_j = c_j + dj;
                            Gdx.app.log("c_i_ai", Integer.toString(c_i));
                            Gdx.app.log("c_j_ai", Integer.toString(c_j));
-                           if(c_i >= 1 && c_j >= 1) //add later check of boundaries
-                           {
-                               if((mas_pawn[c_i][c_j] == 1 || mas_pawn[c_i][c_j] == 3) && mas_pawn[c_i-1][c_j-1] == 0)
-                               {
-                                   return true;
-                               }
-                           }
+                           //change place
                            if(c_i == 0 || c_i == 7 || c_j == 0 || c_j == 7)
                            {
                                break;
                            }
+                           if(c_i >= 1 && c_j >= 1 && c_i <= 6 && c_j <= 6)
+                           {
+                               if((mas_pawn[c_i][c_j] == 1 || mas_pawn[c_i][c_j] == 3) && mas_pawn[c_i+di][c_j+dj] == 0)
+                               {
+                                   return true;
+                               }
+                           }
+
                        }
                    }
                 }
@@ -129,16 +133,19 @@ public class AI {
                         if ((mas_pawn[i + 1][j + 1] == 1 || mas_pawn[i + 1][j + 1] == 3) && mas_pawn[i + 2][j + 2] == 0) //hit in direction >\/
                         {
                            // mas_pawn[i][j] = 0;
-                            mas_pawn[i + 1][j + 1] = 0;
+                          //  mas_pawn[i + 1][j + 1] = 0;
                           //  mas_pawn[i + 2][j + 2] = 2;
                             coordinate_move[0] = 1; //launch animation
                             coordinate_move[1] = i;
                             coordinate_move[2] = j;
                             coordinate_move[3] = i+2;
                             coordinate_move[4] = j+2;
+                            coordinate_move[5] = i + 1;
+                            coordinate_move[6] = j + 1;
                             current_i = i+2;
                             current_j = j+2;
                             coordinate_move[7] = 3; //direction
+                            coordinate_move[8] = 2; //type pawn
                             return coordinate_move;
                         }
                     }
@@ -147,16 +154,19 @@ public class AI {
                         if ((mas_pawn[i - 1][j + 1] == 1 || mas_pawn[i - 1][j + 1] == 3) && mas_pawn[i - 2][j + 2] == 0) //hit ^>
                         {
                            // mas_pawn[i][j] = 0;
-                            mas_pawn[i - 1][j + 1] = 0;
+                          //  mas_pawn[i - 1][j + 1] = 0;
                            // mas_pawn[i - 2][j + 2] = 2;
                             coordinate_move[0] = 1; //launch animation
                             coordinate_move[1] = i;
                             coordinate_move[2] = j;
                             coordinate_move[3] = i-2;
                             coordinate_move[4] = j+2;
+                            coordinate_move[5] = i - 1;
+                            coordinate_move[6] = j + 1;
                             current_i = i-2;
                             current_j = j+2;
                             coordinate_move[7] = 2; //direction
+                            coordinate_move[8] = 2; //type pawn
                             return coordinate_move;
                         }
                     }
@@ -165,16 +175,19 @@ public class AI {
                         if ((mas_pawn[i + 1][j - 1] == 1 || mas_pawn[i + 1][j - 1] == 3) && mas_pawn[i + 2][j - 2] == 0)  //<\/
                         {
                            // mas_pawn[i][j] = 0;
-                            mas_pawn[i + 1][j - 1] = 0; //remove the pawn of player
+                         //   mas_pawn[i + 1][j - 1] = 0; //remove the pawn of player
                           //  mas_pawn[i + 2][j - 2] = 2;
                             coordinate_move[0] = 1; //launch animation
                             coordinate_move[1] = i;
                             coordinate_move[2] = j;
                             coordinate_move[3] = i+2;
                             coordinate_move[4] = j-2;
+                            coordinate_move[5] = i + 1;
+                            coordinate_move[6] = j - 1;
                             current_i = i+2;
                             current_j = j-2;
                             coordinate_move[7] = 4; //direction
+                            coordinate_move[8] = 2; //type pawn
                            // return coordinate_move;
                         }
                     }
@@ -182,24 +195,78 @@ public class AI {
                     {
                         if ((mas_pawn[i - 1][j - 1] == 1 || mas_pawn[i - 1][j - 1] == 3) && mas_pawn[i - 2][j - 2] == 0) //<^
                         {
-                           // mas_pawn[i][j] = 0; //remove enemy from previous place
-                            mas_pawn[i - 1][j - 1] = 0; //remove pawn of computer
-                           // mas_pawn[i - 2][j - 2] = 2; //move pawn of enemy
+                          //  mas_pawn[i - 1][j - 1] = 0; //remove pawn of computer
                             coordinate_move[0] = 1; //launch animation
                             coordinate_move[1] = i;
                             coordinate_move[2] = j;
                             coordinate_move[3] = i-2;
                             coordinate_move[4] = j-2;
+                            coordinate_move[5] = i - 1;
+                            coordinate_move[6] = j - 1;
                              current_i = i-2;
                              current_j = j-2;
                             coordinate_move[7] = 1; //direction
+                            coordinate_move[8] = 2; //type pawn
                             return coordinate_move;
                         }
                     }
                 }
                 if(mas_pawn[i][j] == 4)
                 {
-
+                    //check in all direction
+                    int c_i = i;
+                    int c_j = j;
+                    int di = 0; int dj = 0;
+                    for(int k = 1; k < 5; k++) //k - direction
+                    {
+                        if(k == 1)
+                        {
+                            di = -1;  dj = -1;
+                        }
+                        if(k == 2)
+                        {
+                            di = -1;  dj = 1;
+                        }
+                        if(k == 3)
+                        {
+                            di = 1;   dj = 1;
+                        }
+                        if(k == 4)
+                        {
+                            di = 1;   dj = -1;
+                        }
+                        //update c_i
+                        c_i = i;
+                        c_j = j;
+                        while(true)
+                        {
+                            c_i = c_i + di;
+                            c_j = c_j + dj;
+                            if(c_i >= 1 && c_j >= 1 && c_i <= 6 && c_j <= 6) //border was added
+                            {
+                                if((mas_pawn[c_i][c_j] == 1 || mas_pawn[c_i][c_j] == 3) && mas_pawn[c_i+di][c_j+dj] == 0)
+                                {
+                                    //mas_pawn[i][j] = 0;
+                                    coordinate_move[0] = 1; //launch animation
+                                    coordinate_move[1] = i;  //start
+                                    coordinate_move[2] = j;
+                                    coordinate_move[3] = c_i+di; //finish
+                                    coordinate_move[4] = c_j+dj;
+                                    coordinate_move[5] = c_i; //delete player's pawn
+                                    coordinate_move[6] = c_j;
+                                    current_i = c_i+di;
+                                    current_j = c_j+dj;
+                                    coordinate_move[7] = k; //direction depends on k
+                                    coordinate_move[8] = 4; //type pawn
+                                    return coordinate_move;
+                                }
+                            }
+                            if(c_i == 0 || c_i == 7 || c_j == 0 || c_j == 7)
+                            {
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -215,9 +282,8 @@ public class AI {
                 return true;  //ai have to make move again, this is needed to make animation on every hit
             }
             else return false; //player can make move
-
         }
-        if(check_hit(mas_pawn) == false)
+        if(check_hit(mas_pawn) == false) //just move pawn
         {
             for(int i = 0; i < 8; i++)
             {
@@ -237,7 +303,10 @@ public class AI {
                                 coordinate_move[2] = j;
                                 coordinate_move[3] = i+1;
                                 coordinate_move[4] = j+1;
+                                coordinate_move[5] = -5;
+                                coordinate_move[6] = -5;
                                 coordinate_move[7] = 3;
+                                coordinate_move[8] = 2;
                                 return false; //player have to make a move
                             }
                         }
@@ -252,7 +321,10 @@ public class AI {
                                 coordinate_move[2] = j;
                                 coordinate_move[3] = i+1;
                                 coordinate_move[4] = j-1;
+                                coordinate_move[5] = -5;
+                                coordinate_move[6] = -5;
                                 coordinate_move[7] = 4;
+                                coordinate_move[8] = 2;
                                 return false; //player have to make a move
                             }
                         }
