@@ -344,16 +344,20 @@ public class Move_pawn {
         }*/
         if(have_to_hit(mas_pawn, i_finish, j_finish, current_pawn_type) == true)
         {
+            //Right now - if player have to hit, he can not to hit
             if(current_pawn_type == 3)  //pawn king
             {
+                //Determine the count of enemies pawn
+                int count_enemies = count_element(mas_pawn);
                 //We have to find out what pawn of enemy we are going to delete
                 int c_i = i_start;
                 int c_j = j_start;
                 //find out the direction where we are moving
                 int di = i_finish - i_start;
                 int dj = j_finish - j_start;
-                di = di / Math.abs(di);
+                di = di / Math.abs(di); //get the sign
                 dj = dj / Math.abs(dj);
+                Boolean check_pawn_king = false;
                 while(true)
                 {
                     c_i = c_i + di;
@@ -361,12 +365,28 @@ public class Move_pawn {
 
                     Gdx.app.log("c_i", Integer.toString(c_i));
                     Gdx.app.log("c_j", Integer.toString(c_j));
-                    if(mas_pawn[c_i][c_j] == 2)
+                    if(mas_pawn[c_i][c_j] == 2) //remember the position of enemies
                     {
                         hit_i = c_i;
                         hit_j = c_j;
-                        break;
+                        check_pawn_king = true;
                     }
+                    if(check_pawn_king == true)
+                    {
+                        if(c_i == i_finish && c_j == j_finish) break;
+                    }
+                    if(c_i == 0 || c_i == 7 || c_j == 0 || c_j == 7)
+                    {
+                        //put in previous position
+                        mas_pawn[i_start][j_start] = 3;
+                        return 1;  //player have to make move again
+                    }
+                   /* else
+                    {
+                        //put in previous position
+                        mas_pawn[i_start][j_start] = 3;
+                        return 1;
+                    }*/
                 }
                 if(move_hit_king(mas_pawn, i_start, j_start, i_finish, j_finish, 3, true) == 1)
                 {
@@ -376,6 +396,8 @@ public class Move_pawn {
             }
             if(current_pawn_type == 1)
             {
+                //Determine the count of enemies pawn
+                int count_enemies = count_element(mas_pawn);
                 if(j_start >= 1 && i_start >= 1) //array boundaries
                 {
                     if(mas_pawn[i_start-1][j_start-1] == 2 && i_finish == (i_start-2) && j_finish == (j_start-2)) //<^
@@ -422,9 +444,30 @@ public class Move_pawn {
                         else return 0;
                     }
                 }
+                if(count_element(mas_pawn) != count_enemies-1)
+                {
+                    //put in previous position
+                    mas_pawn[i_start][j_start] = 1;
+                    return 1;
+                }
             }
         }
         return 5;
+    }
+    private int count_element(int[][] mas_pawn)
+    {
+        int count = 0;
+        for(int i = 0; i < 7; i++)
+        {
+            for(int j = 0; j < 7; j++)
+            {
+                if(mas_pawn[i][j] == 2)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
     public int get_current_i()
     {
