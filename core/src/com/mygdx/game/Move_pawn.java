@@ -145,7 +145,7 @@ public class Move_pawn {
                         {
                             return true;
                         }
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j-1] == 2)
                         {
                             return false;
                         }

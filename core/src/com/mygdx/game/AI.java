@@ -105,9 +105,9 @@ public class AI {
                            c_i = c_i + di;
                            c_j = c_j + dj;
                            Gdx.app.log("c_i_ai", Integer.toString(c_i));
-                           Gdx.app.log("c_j_ai", Integer.toString(c_j));
+                           Gdx.app.log("c_j_aj", Integer.toString(c_j));
                            //change place
-                           if(c_i == 0 || c_i == 7 || c_j == 0 || c_j == 7)
+                           if(c_i == -1 || c_i == 8 || c_j == -1 || c_j == 8)
                            {
                                break;
                            }
