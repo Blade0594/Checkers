@@ -44,108 +44,44 @@ public class Move_pawn {
             }
         }
         //for pawn king
-        Boolean[] Direction = new Boolean[]{false, false, false, false};
+     //   Boolean[] Direction = new Boolean[]{false, false, false, false};
         if(type_pawn == 3)
         {
-            //define the direction from where we came
-           /* int di = i_finish - current_i;
-            int dj = j_finish - current_j;
-            if(di >= 0 && dj >= 0)
-            {
-                Direction[0] = true;
-            }
-            if(di >= 0 && dj <= 0)
-            {
-                Direction[1] = true;
-            }
-            if(di <= 0 && dj <= 0)
-            {
-                Direction[2] = true;
-            }
-            if(di <= 0 && dj >= 0)
-            {
-                Direction[3] = true;
-            }*/
+            int di = 0;
+            int dj = 0;
             int next_i = current_i;
             int next_j = current_j;
-
-            if(Direction[0] == false)
+            for(int k = 1; k < 5; k++)
             {
+                if(k == 1)
+                {
+                    di = -1;  dj = -1;
+                }
+                if(k == 2)
+                {
+                    di = -1;  dj = 1;
+                }
+                if(k == 3)
+                {
+                    di = 1;   dj = 1;
+                }
+                if(k == 4)
+                {
+                    di = 1;   dj = -1;
+                }
+                 next_i = current_i;
+                 next_j = current_j;
                 while(true)
                 {
-                    next_i = next_i - 1;
-                    next_j = next_j - 1;
-                    if(next_i >= 1 && next_j >= 1) //array boundaries
+                    next_i = next_i + di;
+                    next_j = next_j + dj;
+                    if(next_i >= 1 && next_j >= 1 && next_i <= 6 && next_j <= 6) //array boundaries
                     {
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4)  && mas_pawn[next_i-1][next_j-1] == 0)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4)  && mas_pawn[next_i+di][next_j+dj] == 0)
                         {
                             return true;
                         }
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j-1] == 2)
-                        {
-                            return false;
-                        }
-                    } else break;
-                }
-            }
-             next_i = current_i;
-             next_j = current_j;
-            if(Direction[1] == false)
-            {
-                while(true)
-                {
-                    next_i = next_i - 1;
-                    next_j = next_j + 1;
-                    if(next_i >= 1 && next_j <= 6)
-                    {
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 0)
-                        {
-                            return true;
-                        }
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i-1][next_j+1] == 2)
-                        {
-                            return false;
-                        }
-                    } else break;
-                }
-            }
-             next_i = current_i;
-             next_j = current_j;
-            if(Direction[2] == false)
-            {
-
-                while(true)
-                {
-                    next_i = next_i + 1;
-                    next_j = next_j + 1;
-                    if(next_i <= 6 && next_j <= 6 && next_i >= 0 && next_j >= 0)
-                    {
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j+1] == 0)
-                        {
-                            return true; //player have to hit
-                        }
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j+1] == 2)
-                        {
-                            return false; //player have to hit
-                        }
-                    } else break;
-                }
-            }
-             next_i = current_i;
-             next_j = current_j;
-            if(Direction[3] == false)
-            {
-                while(true)
-                {
-                    next_i = next_i + 1;
-                    next_j = next_j - 1;
-                    if(next_i <= 6 && next_j >= 1)
-                    {
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j-1] == 0)
-                        {
-                            return true;
-                        }
-                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+1][next_j-1] == 2)
+                        if((mas_pawn[next_i][next_j] == 2 || mas_pawn[next_i][next_j] == 4) && mas_pawn[next_i+di][next_j+dj] == 2)
                         {
                             return false;
                         }
@@ -305,10 +241,6 @@ public class Move_pawn {
             mas_pawn[i_start][j_start] = current_pawn_type;
             return 1; //the move was not done
         }
-        //Log.getLog("dfgdfg", "dsfdfg", 0);
-
-
-      //  Log.d(MyActivity.LOG_TAG,"Application started");
         if(current_i == -100)
         {
             current_i = i_start;
@@ -362,10 +294,7 @@ public class Move_pawn {
                 {
                     c_i = c_i + di;
                     c_j = c_j + dj;
-
-                //    Gdx.app.log("c_i", Integer.toString(c_i));
-                //    Gdx.app.log("c_j", Integer.toString(c_j));
-                    if(mas_pawn[c_i][c_j] == 2) //remember the position of enemies
+                    if(mas_pawn[c_i][c_j] == 2 || mas_pawn[c_i][c_j] == 4) //remember the position of enemies 2 or 4
                     {
                         hit_i = c_i;
                         hit_j = c_j;
@@ -381,12 +310,6 @@ public class Move_pawn {
                         mas_pawn[i_start][j_start] = 3;
                         return 1;  //player have to make move again
                     }
-                   /* else
-                    {
-                        //put in previous position
-                        mas_pawn[i_start][j_start] = 3;
-                        return 1;
-                    }*/
                 }
                 if(move_hit_king(mas_pawn, i_start, j_start, i_finish, j_finish, 3, true) == 1)
                 {

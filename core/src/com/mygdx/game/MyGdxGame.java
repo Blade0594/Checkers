@@ -18,6 +18,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	int[][] mas_pawn;
 	int b_x = 100;
 	int b_y = 400;
+	Boolean choose_pawn_king = false;
+	Boolean choose_pawn_king_ai = false;
 	Boolean ai_move_boolean = false;
 	Boolean possible_move = false;
 	int mouse_down_i ;
@@ -36,7 +38,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	Texture img_pawn_human_king;
 	Rectangle pawn;
 	Rectangle pawn_ai;
-	private int time = 0;
+	//private int time = 0;
 	Move_pawn human ;
 	private BitmapFont font;
 	Texture player ;
@@ -53,6 +55,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		camera.setToOrtho(false, 800, 480);
 		batch = new SpriteBatch();
 		touchPos = new Vector3();
+
 		//Движение компьютера, 0 - запуск анимации(value = 1), 1-4 - координаты перемещения, 5-6 удалить пешку игрока,
 		// 7 - direction, 8 - type_pawn - king pawn of just pawn
 		coordinate_move = new int[] {0, -5,-5,-5,-5, -5, -5, -5, -5 };
@@ -100,12 +103,48 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 		batch.begin();
 		batch.draw(img_background, 0, 0, 800, 480);
 		batch.draw(img_board, 100, 50); //board.width, board.height
-		batch.draw(img_pawn_human, pawn.x, pawn.y); //when playes move the pawn
+		b_y = 400;
+		for(int i = 0; i < 8; i++)
+		{
+			b_x = 100;
+			for(int j = 0; j < 8; j++)
+			{
+				if(mas_pawn[i][j] == 2) {
+					batch.draw(img_pawn_computer, b_x, b_y);
+				}
+				if(mas_pawn[i][j] == 1) {
+					batch.draw(img_pawn_human, b_x, b_y);
+				}
+				if(mas_pawn[i][j] == 3) {
+					batch.draw(img_pawn_human_king, b_x, b_y);
+				}
+				if(mas_pawn[i][j] == 4) {
+					batch.draw(img_pawn_computer_king, b_x, b_y);
+				}
+				b_x += 50;
+			}
+			b_y -= 50;
+		}
+		//It depends on a type of pawn
+		//if(mas_pawn[human.get_i(touchPos.y)][human.get_j(touchPos.x)] == 1
+		if(move_pawn == true &&  choose_pawn_king == false)
+		{
+			batch.draw(img_pawn_human, pawn.x, pawn.y); //when player move the pawn
+		}
+		if(move_pawn == true &&  choose_pawn_king == true)
+		{
+			batch.draw(img_pawn_human_king, pawn.x, pawn.y); //when player move the pawn
+		}
 		if(animation == false)
 		{
 			if(coordinate_move[0] == 1) //launch animation
 			{
 				animation = true;
+				if(mas_pawn[coordinate_move[1]][coordinate_move[2]] == 4)
+				{
+					choose_pawn_king_ai = true;
+				}
+				else choose_pawn_king_ai = false;
 				mas_pawn[coordinate_move[1]][coordinate_move[2]] = 0; //delete from start position
 
 				x = convert.get_x(coordinate_move[2]);
@@ -139,7 +178,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			x += direction_x;
 			y += direction_y;
 		}
-		batch.draw(img_pawn_computer, x, y);
+		if(choose_pawn_king_ai == true)
+		batch.draw(img_pawn_computer_king, x, y);
+		else
+			batch.draw(img_pawn_computer, x, y);
 		if(x == convert.get_x(coordinate_move[4]) && y == convert.get_y(coordinate_move[3]))
 		{
 			if(coordinate_move[3] == 7)
@@ -157,29 +199,6 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 			{
 				ai_move_boolean = ai.move(mas_pawn, coordinate_move);
 			}
-		}
-		 b_y = 400;
-		for(int i = 0; i < 8; i++)
-		{
-			b_x = 100;
-			for(int j = 0; j < 8; j++)
-			{
-				if(mas_pawn[i][j] == 2) {
-					batch.draw(img_pawn_computer, b_x, b_y);
-				}
-				if(mas_pawn[i][j] == 1) {
-					batch.draw(img_pawn_human, b_x, b_y);
-				}
-				if(mas_pawn[i][j] == 3) {
-					batch.draw(img_pawn_human_king, b_x, b_y);
-				}
-				if(mas_pawn[i][j] == 4) {
-					batch.draw(img_pawn_computer_king, b_x, b_y);
-				}
-				b_x += 50;
-			}
-			b_y -= 50;
-
 		}
 		//Анимация движения пешек компьютера
 		//if(coordinate_move[0] != -5)
@@ -227,12 +246,15 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 				   {
 					   mouse_down_i = human.get_i(touchPos.y); //remember the i_start and j_start
 					   mouse_down_j = human.get_j(touchPos.x);
+					   if(mas_pawn[mouse_down_i][mouse_down_j] == 3) choose_pawn_king = true;
+					   else choose_pawn_king = false;
 					   mouse_up_i = mouse_down_i; //чтоб можно было поставить пешку обратно
 					   mouse_up_j = mouse_down_j;
 					    current_pawn_type = mas_pawn[i][j];
 					   mas_pawn[i][j] = 0;
 					   pawn.x = touchPos.x - 25;
 					   pawn.y = touchPos.y - 25;
+
 				   }
 				}
 				b_x += 50;

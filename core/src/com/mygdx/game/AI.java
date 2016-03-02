@@ -113,10 +113,15 @@ public class AI {
                            }
                            if(c_i >= 1 && c_j >= 1 && c_i <= 6 && c_j <= 6)
                            {
+                               if(mas_pawn[c_i][c_j] == 2 || mas_pawn[c_i][c_j] == 4) //between player's pawn and computer's pawn is other pawn
+                               {
+                                   return false;
+                               }
                                if((mas_pawn[c_i][c_j] == 1 || mas_pawn[c_i][c_j] == 3) && mas_pawn[c_i+di][c_j+dj] == 0)
                                {
                                    return true;
                                }
+
                            }
 
                        }
