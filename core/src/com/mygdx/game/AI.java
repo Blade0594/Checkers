@@ -363,13 +363,14 @@ public class AI {
                         if(i <= 6 && j >= 1) {
                             if (mas_pawn[i + 1][j - 1] == 0){   //move to left
                                 Choose_ai ai = new Choose_ai(i, j, 1);
-                                if(i <= 5 && j >=2 ){
+                                if(i <= 5 && j >= 2 ){
                                     if (mas_pawn[i + 2][j - 2] == 0){
                                         ai.evaluation = 5;
                                     }
                                     else ai.evaluation = 3;
-                                    ai_next_move.add(ai);
                                 }
+                                else  ai.evaluation = 5;
+                                ai_next_move.add(ai);
                             }
                         }
                         if(i <= 6 && j <= 6){
@@ -380,23 +381,27 @@ public class AI {
                                         ai2.evaluation = 5;
                                     }
                                     else ai2.evaluation = 3;
-                                    ai_next_move.add(ai2);
                                 }
+                                else ai2.evaluation = 5;
+                                ai_next_move.add(ai2);
                             }
                         }
                 }
             }
         }
-        Gdx.app.log("Choose AI----", "asdasd");
+        for(int i = 0; i < ai_next_move.size(); i++)
+        {
+            Gdx.app.log("Moves----", Integer.toString(ai_next_move.get(i).pawn_i)
+                    + " " + Integer.toString(ai_next_move.get(i).pawn_j)
+                    + " " + Integer.toString(ai_next_move.get(i).way_move)
+                    + " " + Integer.toString(ai_next_move.get(i).evaluation));
+        }
         int max_exaluation = ai_next_move.get(0).evaluation;
         int index_max_evaluation = 0;
         for(int i = 1; i < ai_next_move.size(); i++)
         {
             if(ai_next_move.get(i).evaluation >= max_exaluation)
             {
-                Gdx.app.log("EVALUATION----", Integer.toString(ai_next_move.get(i).pawn_i)
-                        + " " + Integer.toString(ai_next_move.get(i).pawn_j)
-                        + " " + Integer.toString(ai_next_move.get(i).way_move));
                 max_exaluation = ai_next_move.get(i).evaluation;
                 index_max_evaluation = i;
             }
