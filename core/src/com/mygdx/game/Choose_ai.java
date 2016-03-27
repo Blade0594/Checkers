@@ -9,7 +9,7 @@ public class Choose_ai {
     int pawn_i = 0;
     int pawn_j = 0;
     int way_move ; //1 - left, 2 - right
-    int evaluation ;
+    int evaluation  = 0;
     Choose_ai(int i, int j, int way_move1)
     {
         pawn_i = i;

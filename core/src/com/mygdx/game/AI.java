@@ -339,56 +339,62 @@ public class AI {
                                 return false; //player have to make a move
                             }
                         }
-
-
         }
         return false;
     }
-
-    private int choose_best_move(int[][] mas_pawn)
+    private int[][] get_copy_array(int[][] arr)
     {
-        ai_next_move.clear();
-       /* int[][] mas_pawn2 = new int[8][8];
+        int[][] mas_pawn_copy = new int[8][8];
         for(int i = 0; i < 8; i++)
         {
             for(int j = 0; j < 8; j++)
             {
-                mas_pawn2[i][j] = mas_pawn[i][j];
+                mas_pawn_copy[i][j] = arr[i][j];
+
             }
+        }
+        return  mas_pawn_copy;
+    }
+    private int choose_best_move(int[][] mas_pawn)
+    {
+        ai_next_move.clear();
+        int[][] mas_pawn_copy = get_copy_array(mas_pawn);
+
+      /* for(int i = 0; i < 8; i++)
+        {
+            Gdx.app.log("", Integer.toString(mas_pawn_copy[i][0]) + Integer.toString(mas_pawn_copy[i][1]) + Integer.toString(mas_pawn_copy[i][2]) +
+                    Integer.toString(mas_pawn_copy[i][3]) + Integer.toString(mas_pawn_copy[i][4]) + Integer.toString(mas_pawn_copy[i][5]) +
+                    Integer.toString(mas_pawn_copy[i][6]) + Integer.toString(mas_pawn_copy[i][7]));
         }*/
-        int count_variants = 0;
-        for(int i = 7; i >= 0; i--) {
+        for(int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (mas_pawn[i][j] == 2) {
                         if(i <= 6 && j >= 1) {
                             if (mas_pawn[i + 1][j - 1] == 0){   //move to left
+                                mas_pawn_copy[i][j] = 0; //delete from previous position
+                                mas_pawn_copy[i + 1][j - 1] = 2;
                                 Choose_ai ai = new Choose_ai(i, j, 1);
-                                if(i <= 5 && j >= 2 ){
-                                    if (mas_pawn[i + 2][j - 2] == 0){
-                                        ai.evaluation = 5;
-                                    }
-                                    else ai.evaluation = 3;
-                                }
-                                else  ai.evaluation = 5;
+                                ai.evaluation += player_move(mas_pawn_copy);
+                                if((i+1) == 7) ai.evaluation += 7;
                                 ai_next_move.add(ai);
                             }
+                            mas_pawn_copy = get_copy_array(mas_pawn);
                         }
                         if(i <= 6 && j <= 6){
                             if (mas_pawn[i + 1][j + 1] == 0) { //move to right
-                                Choose_ai ai2 = new Choose_ai(i, j, 2);
-                                if(i <= 5 && j <= 5) {
-                                    if (mas_pawn[i + 2][j + 2] == 0){
-                                        ai2.evaluation = 5;
-                                    }
-                                    else ai2.evaluation = 3;
-                                }
-                                else ai2.evaluation = 5;
-                                ai_next_move.add(ai2);
+                                mas_pawn_copy[i][j] = 0; //delete from previous position
+                                mas_pawn_copy[i + 1][j + 1] = 2; //new AI move
+                                Choose_ai ai = new Choose_ai(i, j, 2); //move left
+                                ai.evaluation += player_move(mas_pawn_copy);
+                                if((i+1) == 7) ai.evaluation += 7;
+                                ai_next_move.add(ai);
                             }
+                            mas_pawn_copy = get_copy_array(mas_pawn);
                         }
                 }
             }
         }
+        int index_max_evaluation = 0;
         for(int i = 0; i < ai_next_move.size(); i++)
         {
             Gdx.app.log("Moves----", Integer.toString(ai_next_move.get(i).pawn_i)
@@ -397,7 +403,6 @@ public class AI {
                     + " " + Integer.toString(ai_next_move.get(i).evaluation));
         }
         int max_exaluation = ai_next_move.get(0).evaluation;
-        int index_max_evaluation = 0;
         for(int i = 1; i < ai_next_move.size(); i++)
         {
             if(ai_next_move.get(i).evaluation >= max_exaluation)
@@ -406,6 +411,55 @@ public class AI {
                 index_max_evaluation = i;
             }
         }
+        Gdx.app.log("index_max_evaluation",Integer.toString(index_max_evaluation));
         return index_max_evaluation;
+    }
+    private int player_move(int[][] mas_pawn_copy)
+    {
+        /*  for(int i = 0; i < 8; i++)
+        {
+            Gdx.app.log("", Integer.toString(mas_pawn_copy[i][0]) + Integer.toString(mas_pawn_copy[i][1]) + Integer.toString(mas_pawn_copy[i][2]) +
+                    Integer.toString(mas_pawn_copy[i][3]) + Integer.toString(mas_pawn_copy[i][4]) + Integer.toString(mas_pawn_copy[i][5]) +
+                    Integer.toString(mas_pawn_copy[i][6]) + Integer.toString(mas_pawn_copy[i][7]));
+        }*/
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                if(mas_pawn_copy[i][j] == 1) //check if player have to hit
+                {
+                    //Check in all directions for simple pawn
+                    if(i >= 2 && j >= 2)
+                    {
+                        if(mas_pawn_copy[i-1][j-1] == 2 && mas_pawn_copy[i-2][j-2] == 0)
+                        {
+                            return 1;
+                        }
+                    }
+                   if(i >= 2 && j <= 5)
+                   {
+                       if(mas_pawn_copy[i-1][j+1] == 2 && mas_pawn_copy[i-2][j+2] == 0)
+                       {
+                           return 1;
+                       }
+                   }
+                   if(i <= 5 && j <= 5)
+                   {
+                       if(mas_pawn_copy[i+1][j+1] == 2 && mas_pawn_copy[i+2][j+2] == 0)
+                       {
+                           return 1;
+                       }
+                   }
+                   if(i <= 5 && j >= 2)
+                   {
+                       if(mas_pawn_copy[i+1][j-1] == 2 && mas_pawn_copy[i+2][j-2] == 0)
+                       {
+                           return 1;
+                       }
+                   }
+                }
+            }
+        }
+        return 4;
     }
 }
