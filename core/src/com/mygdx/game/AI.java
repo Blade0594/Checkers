@@ -1,17 +1,17 @@
 package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
+
+import java.util.ArrayList;
+
 /**
  * Created by Dmitry on 18.02.2016.
  */
 public class AI {
     private int current_i = -100;
     private int current_j = -100;
+    ArrayList<Choose_ai> ai_next_move = new ArrayList<Choose_ai>();
     private boolean check_next_hit(int[][] mas_pawn)
     {
-      //  Gdx.app.log("drgret", "check_next_hit1");
-       // if(mas_pawn[current_i][current_j] == 2)
-        //{
-        //    Gdx.app.log("drgret", "check_next_hit2");
             if(current_i >=2 && current_j >=2)
             {
                 if((mas_pawn[current_i-1][current_j-1] == 1 || mas_pawn[current_i-1][current_j-1] == 3) && mas_pawn[current_i-2][current_j-2] == 0) //^<
@@ -296,15 +296,15 @@ public class AI {
         }
         if(check_hit(mas_pawn) == false) //just move pawn
         {
-            for(int i = 0; i < 8; i++)
-            {
-                for(int j = 0; j < 8; j++)
-                {
-                    if(mas_pawn[i][j] == 2)
-                    {
+            //Add the possibility AI to make a choose
+            int index_choose = choose_best_move(mas_pawn);
+            int i = ai_next_move.get(index_choose).pawn_i;
+            int j = ai_next_move.get(index_choose).pawn_j;
+
                         if(i <= 6 && j <= 6)
                         {
-                            if(mas_pawn[i+1][j+1] == 0) //empty place on the border
+
+                            if(ai_next_move.get(index_choose).way_move == 2) //empty place on the border
                             {
                                // mas_pawn[i][j] = 0; //delete pawn from previous position
                               //  mas_pawn[i+1][j+1] = 2;
@@ -323,7 +323,7 @@ public class AI {
                         }
                         if(j >= 1 && i <= 6) //move left
                         {
-                            if(mas_pawn[i+1][j-1] == 0) //empty place on the border
+                            if(ai_next_move.get(index_choose).way_move == 1) //empty place on the border
                             {
                                 //mas_pawn[i][j] = 0; //delete pawn from previous position
                                // mas_pawn[i+1][j-1] = 2;
@@ -339,10 +339,68 @@ public class AI {
                                 return false; //player have to make a move
                             }
                         }
-                    }
+
+
+        }
+        return false;
+    }
+
+    private int choose_best_move(int[][] mas_pawn)
+    {
+        ai_next_move.clear();
+       /* int[][] mas_pawn2 = new int[8][8];
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                mas_pawn2[i][j] = mas_pawn[i][j];
+            }
+        }*/
+        int count_variants = 0;
+        for(int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                if (mas_pawn[i][j] == 2) {
+                        if(i <= 6 && j >= 1) {
+                            if (mas_pawn[i + 1][j - 1] == 0){   //move to left
+                                Choose_ai ai = new Choose_ai(i, j, 1);
+                                if(i <= 5 && j >=2 ){
+                                    if (mas_pawn[i + 2][j - 2] == 0){
+                                        ai.evaluation = 5;
+                                    }
+                                    else ai.evaluation = 3;
+                                    ai_next_move.add(ai);
+                                }
+                            }
+                        }
+                        if(i <= 6 && j <= 6){
+                            if (mas_pawn[i + 1][j + 1] == 0) { //move to right
+                                Choose_ai ai2 = new Choose_ai(i, j, 2);
+                                if(i <= 5 && j <= 5) {
+                                    if (mas_pawn[i + 2][j + 2] == 0){
+                                        ai2.evaluation = 5;
+                                    }
+                                    else ai2.evaluation = 3;
+                                    ai_next_move.add(ai2);
+                                }
+                            }
+                        }
                 }
             }
         }
-        return false;
+        Gdx.app.log("Choose AI----", "asdasd");
+        int max_exaluation = ai_next_move.get(0).evaluation;
+        int index_max_evaluation = 0;
+        for(int i = 1; i < ai_next_move.size(); i++)
+        {
+            if(ai_next_move.get(i).evaluation >= max_exaluation)
+            {
+                Gdx.app.log("EVALUATION----", Integer.toString(ai_next_move.get(i).pawn_i)
+                        + " " + Integer.toString(ai_next_move.get(i).pawn_j)
+                        + " " + Integer.toString(ai_next_move.get(i).way_move));
+                max_exaluation = ai_next_move.get(i).evaluation;
+                index_max_evaluation = i;
+            }
+        }
+        return index_max_evaluation;
     }
 }
